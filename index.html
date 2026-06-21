@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>DeBacco Nexus — Governed AI Infrastructures</title>
+  <meta name="description"
+        content="DeBacco Nexus builds governed AI infrastructures including NODO, AIRS Nexus, and the Inference Governance Module (IGM), using proprietary NSI, GDI, and PGI tiers of governed intelligence." />
+  <link rel="preconnect" href="https://api.fontshare.com" />
+  <link rel="stylesheet"
+        href="https://api.fontshare.com/v2/css?f[]=general-sans@400,500,600,700&f[]=zodiak@400,500,700&display=swap" />
+  <style>
+    :root {
+      --font-display: "Zodiak", Georgia, serif;
+      --font-body: "General Sans", system-ui, -apple-system, BlinkMacSystemFont,
+                   "Segoe UI", sans-serif;
+
+      --text-xs: 0.75rem;
+      --text-sm: 0.875rem;
+      --text-base: 1rem;
+      --text-lg: 1.125rem;
+      --text-xl: 1.5rem;
+      --text-2xl: 2.4rem;
+
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+      --space-20: 5rem;
+      --space-24: 6rem;
+
+      --radius-sm: 0.375rem;
+      --radius-md: 0.6rem;
+      --radius-lg: 0.95rem;
+      --radius-xl: 1.4rem;
+      --radius-full: 9999px;
+
+      --color-bg: #050814;
+      --color-surface: #0b101c;
+      --color-surface-soft: #101725;
+      --color-border: #1c2537;
+      --color-border-soft: #232f45;
+      --color-text: #f3f5fd;
+      --color-text-muted: #a5b2c9;
+      --color-text-soft: #7f8aa0;
+
+      --color-primary: #1E5FE6;
+      --color-green: #24A670;
+      --color-orange: #FF8A3C;
+      --color-alert: #E2475C;
+
+      --shadow-md: 0 22px 80px rgba(0, 0, 0, 0.7);
+      --content: 1100px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.6;
+      color: var(--color-text);
+      background:
+        radial-gradient(circle at top left, rgba(30,95,230,0.2), transparent 55%),
+        radial-gradient(circle at top right, rgba(36,166,112,0.15), transparent 55%),
+        radial-gradient(circle at bottom left, rgba(255,138,60,0.12), transparent 60%),
+        var(--color-bg);
+    }
+
+    img, svg { display: block; max-width: 100%; }
+    a { text-decoration: none; color: inherit; }
+
+    .container {
+      width: min(100% - 2.5rem, var(--content));
+      margin: 0 auto;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(90deg, rgba(5,8,20,0.94), rgba(5,8,20,0.9));
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-4);
+      padding-block: var(--space-3);
+    }
+
+    .dn-brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+    }
+
+    .dn-mark { width: 2.7rem; height: 2.7rem; }
+
+    .dn-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+    }
+
+    .dn-name {
+      font-family: var(--font-display);
+      font-size: 1.1rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .dn-tag {
+      font-size: var(--text-xs);
+      color: var(--color-text-soft);
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      font-size: var(--text-sm);
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-full);
+      color: var(--color-text-soft);
+    }
+
+    nav a:hover {
+      background: rgba(30,95,230,0.12);
+      color: var(--color-text);
+    }
+
+    main section { padding-block: var(--space-16); }
+
+    .hero { padding-top: var(--space-16); }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: var(--space-10);
+      align-items: start;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(107,144,255,0.6);
+      background: radial-gradient(circle at top left,
+        rgba(30,95,230,0.3),
+        rgba(5,8,20,0.9));
+      font-size: var(--text-xs);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: #d6e0ff;
+      margin-bottom: var(--space-4);
+    }
+
+    h1, h2, h3 {
+      font-family: var(--font-display);
+      font-weight: 500;
+      letter-spacing: -0.01em;
+    }
+
+    h1 {
+      font-size: 2.6rem;
+      line-height: 1.02;
+      margin-bottom: var(--space-4);
+      max-width: 15ch;
+    }
+
+    h2 {
+      font-size: var(--text-xl);
+      margin-bottom: var(--space-3);
+    }
+
+    h3 {
+      font-size: var(--text-lg);
+      margin-bottom: var(--space-2);
+    }
+
+    .hero-lead {
+      color: var(--color-text-muted);
+      max-width: 60ch;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--space-3);
+      margin-top: var(--space-6);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2.8rem;
+      padding: 0 1.3rem;
+      border-radius: var(--radius-full);
+      border: 1px solid transparent;
+      font-size: var(--text-sm);
+      font-weight: 600;
+    }
+
+    .btn-primary {
+      background: var(--color-primary);
+      color: #f7f8ff;
+      box-shadow:
+        0 0 0 1px rgba(15,23,42,0.5),
+        var(--shadow-md);
+    }
+
+    .btn-primary:hover { background: #1643a8; }
+
+    .btn-ghost {
+      border-color: var(--color-border-soft);
+      background: rgba(13,19,31,0.8);
+      color: var(--color-text-muted);
+    }
+
+    .hero-panel {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border);
+      background: radial-gradient(circle at top,
+        rgba(30,95,230,0.28),
+        rgba(5,8,20,0.96));
+      padding: var(--space-5);
+      box-shadow: var(--shadow-md);
+    }
+
+    .pill-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: var(--space-3);
+    }
+
+    .pill {
+      border-radius: var(--radius-full);
+      padding: 0.1rem 0.6rem;
+      font-size: var(--text-xs);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+    }
+
+    .pill-blue {
+      background: rgba(30,95,230,0.18);
+      color: #d1ddff;
+      border: 1px solid rgba(30,95,230,0.5);
+    }
+
+    .pill-green {
+      background: rgba(36,166,112,0.16);
+      color: #c8f4df;
+      border: 1px solid rgba(36,166,112,0.5);
+    }
+
+    .pill-orange {
+      background: rgba(255,138,60,0.16);
+      color: #ffe0c7;
+      border: 1px solid rgba(255,138,60,0.55);
+    }
+
+    .pill-purple {
+      background: rgba(129,140,248,0.15);
+      color: #e0e3ff;
+      border: 1px solid rgba(129,140,248,0.5);
+    }
+
+    .pill-soft {
+      background: rgba(148,163,184,0.16);
+      color: var(--color-text-muted);
+      border: 1px solid rgba(148,163,184,0.45);
+    }
+
+    .section-intro {
+      max-width: 62ch;
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-6);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0,1fr));
+      gap: var(--space-6);
+    }
+
+    .card {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border-soft);
+      background: linear-gradient(145deg,
+        rgba(15,23,42,0.96),
+        rgba(11,16,30,0.96));
+      padding: var(--space-5);
+    }
+
+    .card p { color: var(--color-text-muted); }
+
+    .stack-label {
+      font-size: var(--text-xs);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--color-text-soft);
+      margin-bottom: var(--space-3);
+    }
+
+    .stack {
+      display: grid;
+      gap: var(--space-3);
+    }
+
+    .stack-item {
+      display: flex;
+      justify-content: space-between;
+      gap: var(--space-3);
+      align-items: baseline;
+      padding: 0.65rem 0.9rem;
+      border-radius: 0.9rem;
+      background: rgba(15,23,42,0.9);
+      border: 1px solid rgba(31,41,55,0.85);
+    }
+
+    .stack-item strong { font-size: var(--text-sm); }
+    .stack-item span   { font-size: var(--text-xs); color: var(--color-text-soft); }
+
+    .stack-tag {
+      font-size: var(--text-xs);
+      padding: 0.1rem 0.5rem;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(148,163,184,0.5);
+      color: var(--color-text-soft);
+    }
+
+    .systems-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0,1fr));
+      gap: var(--space-6);
+    }
+
+    .systems-card {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border-soft);
+      background: linear-gradient(145deg,
+        rgba(15,23,42,0.98),
+        rgba(11,16,28,0.98));
+      padding: var(--space-5);
+    }
+
+    .systems-card p {
+      color: var(--color-text-muted);
+      margin-bottom: var(--space-3);
+    }
+
+    .list {
+      list-style: none;
+      display: grid;
+      gap: 0.4rem;
+      font-size: var(--text-sm);
+      color: var(--color-text-soft);
+    }
+
+    .list li::before {
+      content: "•";
+      color: var(--color-green);
+      margin-right: 0.4rem;
+    }
+
+    .bio {
+      border-radius: var(--radius-xl);
+      border: 1px solid var(--color-border-soft);
+      background: radial-gradient(circle at top left,
+        rgba(36,166,112,0.18),
+        rgba(11,16,30,0.96));
+      padding: var(--space-5);
+    }
+
+    .footer {
+      border-top: 1px solid var(--color-border);
+      padding-block: var(--space-6);
+      color: var(--color-text-soft);
+      font-size: var(--text-sm);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: var(--space-4);
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 900px) {
+      .hero-grid,
+      .grid-2,
+      .systems-grid { grid-template-columns: 1fr; }
+      main section { padding-block: var(--space-12); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <div class="dn-brand">
+        <svg class="dn-mark" viewBox="0 0 96 96" aria-hidden="true">
+          <defs>
+            <linearGradient id="dnCore" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%"   stop-color="#1E5FE6" />
+              <stop offset="50%"  stop-color="#24A670" />
+              <stop offset="100%" stop-color="#FF8A3C" />
+            </linearGradient>
+          </defs>
+          <circle cx="48" cy="48" r="30" fill="none"
+                  stroke="#1E5FE6" stroke-width="4"
+                  stroke-dasharray="3 8" />
+          <circle cx="48" cy="48" r="22" fill="none"
+                  stroke="#24A670" stroke-width="4" />
+          <circle cx="48" cy="48" r="14" fill="none"
+                  stroke="#FF8A3C" stroke-width="5" />
+          <rect x="38" y="26" width="20" height="20" rx="3"
+                fill="url(#dnCore)" />
+          <circle cx="48" cy="36" r="3" fill="#fff" />
+          <path d="M48 50v14M40 56l8 8 8-8"
+                stroke="#0b101c" stroke-width="4"
+                stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <div class="dn-meta">
+          <div class="dn-name">DeBacco Nexus</div>
+          <div class="dn-tag">Governed AI infrastructures</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#about">About</a>
+        <a href="#stack">Architecture</a>
+        <a href="#tiers">NSI · GDI · PGI</a>
+        <a href="#systems">Systems</a>
+        <a href="#founder">Founder</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero" id="about">
+      <div class="container hero-grid">
+        <div>
+          <div class="eyebrow">Born from governed practice</div>
+          <h1>We build AI infrastructures that institutions can put their name on.</h1>
+          <p class="hero-lead">
+            DeBacco Nexus LLC designs governed AI architectures for systems
+            that cannot afford to guess. Our work starts where separate
+            schemas, agencies, and models collide—and refuses to let that
+            collision remain a blind spot.
+          </p>
+          <div class="hero-actions">
+            <a href="#systems" class="btn btn-primary">
+              Explore NODO, AIRS Nexus, IGM
+            </a>
+            <a href="#stack" class="btn btn-ghost">
+              View the architecture stack
+            </a>
+          </div>
+        </div>
+        <aside class="hero-panel">
+          <h3>What we do</h3>
+          <p>
+            We build governed AI infrastructures where every inference is
+            bounded, every blind spot is mapped, and every cross‑schema
+            action leaves an auditable receipt.
+          </p>
+          <div class="pill-row">
+            <span class="pill pill-blue">Governed inference</span>
+            <span class="pill pill-green">Institutional interoperability</span>
+            <span class="pill pill-orange">Receipts, not vibes</span>
+            <span class="pill pill-purple">Veteran‑led</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section id="stack">
+      <div class="container">
+        <h2>One company. One stack. Three governed pillars.</h2>
+        <p class="section-intro">
+          DeBacco Nexus is not a feature vendor. It is a governed AI stack
+          company. At the bottom is a patented inference engine. In the
+          middle are governed application systems. At the top is an
+          institutional interoperability architecture that makes blindness
+          visible at the knot.
+        </p>
+        <div class="grid-2">
+          <div class="card">
+            <div class="stack-label">DeBacco Nexus stack</div>
+            <div class="stack">
+              <div class="stack-item">
+                <div>
+                  <strong>NODO — Native Orthogonal Data Output</strong>
+                  <span>
+                    The architecture that governs institutional
+                    interoperability at the cross‑schema knot.
+                  </span>
+                </div>
+                <span class="stack-tag">Architecture</span>
+              </div>
+              <div class="stack-item">
+                <div>
+                  <strong>AIRS — Adaptive Intelligent Reporting System</strong>
+                  <span>
+                    Governed applications that use NSI, GDI, and PGI to turn
+                    domains into live, auditable systems.
+                  </span>
+                </div>
+                <span class="stack-tag">Systems</span>
+              </div>
+              <div class="stack-item">
+                <div>
+                  <strong>IGM — Inference Governance Module</strong>
+                  <span>
+                    The engine that meters tokens, enforces constraints, and
+                    produces receipts for every inference.
+                  </span>
+                </div>
+                <span class="stack-tag">Engine</span>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h3>Why this stack exists</h3>
+            <p>
+              Most AI platforms offer more speed and more models. DeBacco
+              Nexus offers governed AI that courts, agencies, and operators
+              can sign their name to. We build for environments where every
+              decision must be explainable, every action receipted, and every
+              blind spot acknowledged and addressed in the architecture
+              itself.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tiers">
+      <div class="container">
+        <h2>The three tiers of governed intelligence</h2>
+        <p class="section-intro">
+          NSI, GDI, and PGI are proprietary tiers of governed intelligence
+          invented by DeBacco Nexus and defined in our patent filings. They
+          appear across NODO, AIRS Nexus, and the Inference Governance
+          Module (IGM), giving institutions a repeatable pattern for governed
+          AI.
+        </p>
+        <div class="systems-grid">
+          <article class="systems-card">
+            <h3>NSI — Negative Space Intelligence</h3>
+            <p>
+              NSI is the audit layer that asks a harder question than
+              “What data do we have?” It asks, “What can this schema not see
+              by design?” NSI scans structures, relationships, and expected
+              fields to surface <strong>blindness zones</strong> — places
+              where an institution has no visibility even though a domain
+              expert would expect it.
+            </p>
+            <ul class="list">
+              <li>Identifies structural gaps and cross‑agency blind spots.</li>
+              <li>Flags missing temporal and causal links in your data.</li>
+              <li>Turns omissions into tracked governance objects.</li>
+              <li>Provides the map that NODO and AIRS build on.</li>
+            </ul>
+          </article>
+
+          <article class="systems-card">
+            <h3>GDI — Governed Data Intelligence</h3>
+            <p>
+              GDI is the deterministic layer that runs on governed data and
+              NSI findings. It encodes <strong>zero‑token governance
+              rules</strong> that fire automatically whenever relevant
+              records are touched, turning high‑level policy into executable
+              constraints.
+            </p>
+            <ul class="list">
+              <li>Expresses junction logic in explicit IF / AND / THEN rules.</li>
+              <li>Runs checks every time data is viewed or analyzed.</li>
+              <li>Uses zero AI tokens for facts that structure already governs.</li>
+              <li>Logs every rule fire into the governance receipt trail.</li>
+            </ul>
+          </article>
+
+          <article class="systems-card">
+            <h3>PGI — Predictive Governed Intelligence</h3>
+            <p>
+              PGI is the predictive layer that only activates inside the
+              envelope defined by NSI and GDI. It uses AI models to generate
+              <strong>bounded predictions</strong> with confidence levels,
+              intervention windows, and human approval queues, under explicit
+              pre‑inference constraints.
+            </p>
+            <ul class="list">
+              <li>Produces outcome probabilities with confidence bounds.</li>
+              <li>Suggests intervention windows and recommended actions.</li>
+              <li>Operates under token budgets set by the IGM.</li>
+              <li>Emits receipts showing what data was used and why.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="systems">
+      <div class="container">
+        <h2>The governed systems we ship</h2>
+        <p class="section-intro">
+          Our products are not demos. They are deployed systems that run in
+          live institutional environments and answer to real accountability
+          demands.
+        </p>
+        <div class="systems-grid">
+          <article class="systems-card">
+            <h3>NODO — Native Orthogonal Data Output</h3>
+            <p>
+              NODO is a governed AI architecture for institutional
+              interoperability. It reveals cross‑schema blindness zones,
+              generates deterministic rules at the interoperability knot, and
+              governs cross‑agency inference before any model is allowed to
+              answer.
+            </p>
+            <ul class="list">
+              <li>Maps where separate schemas are collectively blind.</li>
+              <li>Creates junction fields for invisible interactions.</li>
+              <li>Imposes pre‑inference governance gates at the knot.</li>
+              <li>Logs receipts for every cross‑schema traversal.</li>
+            </ul>
+          </article>
+
+          <article class="systems-card">
+            <h3>AIRS Nexus — Adaptive Intelligent Reporting System</h3>
+            <p>
+              AIRS Nexus turns domains like justice‑involved veterans into
+              governed applications with the NSI / GDI / PGI pattern: NSI to
+              identify schema gaps, GDI to fire zero‑token deterministic
+              rules, and PGI to produce bounded predictions with human
+              approval queues.
+            </p>
+            <ul class="list">
+              <li>Every record, field, and change is governed from birth.</li>
+              <li>NSI surfaces structural gaps your schema cannot see.</li>
+              <li>GDI runs deterministic rules with zero wasted tokens.</li>
+              <li>PGI predictions arrive with confidence and receipts.</li>
+            </ul>
+          </article>
+
+          <article class="systems-card">
+            <h3>IGM — Inference Governance Module</h3>
+            <p>
+              The IGM is the patented inference governance engine that sits
+              inside our architectures and systems. It constrains behavior,
+              budgets power and tokens, and produces auditable receipts for
+              every interaction with an AI model.
+            </p>
+            <ul class="list">
+              <li>Token and power‑aware budgeting for every inference.</li>
+              <li>Pre‑defined governance modes and escalation paths.</li>
+              <li>Deterministic guardrails around probabilistic models.</li>
+              <li>Receipts that prove what the system did and why.</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="founder">
+      <div class="container">
+        <div class="grid-2">
+          <article class="bio">
+            <h2>Founded from the front lines of systems failure</h2>
+            <p class="section-intro">
+              DeBacco Nexus was founded by James DeBacco, a Marine Corps
+              veteran, MSW social worker, and Doctor of Social Work (DSW)
+              candidate at the USC Suzanne Dworak-Peck School of Social Work.
+              James serves as a Veterans Service Representative and Veterans
+              Treatment Court liaison for Los Angeles County and is an
+              advocate and partner with CalCompute, where he collaborates on
+              governed AI research and infrastructure.
+            </p>
+            <p style="color: var(--color-text-muted); margin-top: var(--space-4);">
+              Working inside fragmented institutions, James saw the same
+              pattern everywhere: separate systems, separate schemas, and no
+              governed way to see what they were collectively blind to.
+              DeBacco Nexus exists to solve that problem as infrastructure.
+              NODO, AIRS Nexus, and the IGM are the first expressions of
+              that work.
+            </p>
+          </article>
+          <article class="card">
+            <h3>Where we are going</h3>
+            <p>
+              We are building a future where governed AI infrastructure is as
+              standard as networking or storage. Our goal is simple: any
+              institution should be able to deploy governed inference,
+              governed applications, and governed interoperability—without
+              giving up accountability to a black box.
+            </p>
+            <div class="pill-row" style="margin-top: var(--space-4);">
+              <span class="pill pill-blue">Courts &amp; agencies</span>
+              <span class="pill pill-green">Public systems</span>
+              <span class="pill pill-orange">Safety‑critical AI</span>
+              <span class="pill pill-soft">Infrastructure, not widgets</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>
+        © DeBacco Nexus LLC · Governed AI infrastructures ·
+        <a href="mailto:"></a> ·
+        <a href="mailto:info@debacconexus.com">info@debacconexus.com</a>
+      </span>
+      <span>
+        Stack: NODO · AIRS Nexus · IGM · NSI · GDI · PGI · debacconexus.com
+      </span>
+    </div>
+  </footer>
+</body>
+</html>
