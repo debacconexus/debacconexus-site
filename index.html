@@ -438,7 +438,7 @@
                 fill="url(#dnCore)" />
           <circle cx="48" cy="36" r="3" fill="#fff" />
           <path d="M48 50v14M40 56l8 8 8-8"
-                stroke="#0b101c" stroke-width="4"
+                stroke="#f3f5fd" stroke-width="4"
                 stroke-linecap="round" stroke-linejoin="round" />
         </svg>
         <div class="dn-meta">
@@ -477,18 +477,37 @@
             </a>
           </div>
         </div>
-        <aside class="hero-panel">
-          <h3>What we do</h3>
-          <p>
-            We build governed AI infrastructures where every inference is
-            bounded, every blind spot is mapped, and every cross‑schema
-            action leaves an auditable receipt.
-          </p>
-          <div class="pill-row">
-            <span class="pill pill-blue">Governed inference</span>
-            <span class="pill pill-green">Institutional interoperability</span>
-            <span class="pill pill-orange">Receipts, not vibes</span>
-            <span class="pill pill-purple">Veteran‑led</span>
+        <aside class="hero-panel" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1.5rem;padding:2rem">
+          <svg viewBox="0 0 96 96" width="220" height="220" role="img">
+            <title>DeBacco Nexus NODO Logo</title>
+            <defs>
+              <linearGradient id="dnCore2" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#1E5FE6"/>
+                <stop offset="50%" stop-color="#24A670"/>
+                <stop offset="100%" stop-color="#FF8A3C"/>
+              </linearGradient>
+            </defs>
+            <circle cx="48" cy="48" r="42" fill="none" stroke="#1E5FE6" stroke-width="3" stroke-dasharray="4 10" opacity="0.9">
+              <animateTransform attributeName="transform" type="rotate" from="0 48 48" to="360 48 48" dur="40s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="48" cy="48" r="32" fill="none" stroke="#24A670" stroke-width="3" opacity="0.9">
+              <animateTransform attributeName="transform" type="rotate" from="360 48 48" to="0 48 48" dur="30s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="48" cy="48" r="22" fill="none" stroke="#FF8A3C" stroke-width="4" opacity="0.9">
+              <animateTransform attributeName="transform" type="rotate" from="0 48 48" to="360 48 48" dur="20s" repeatCount="indefinite"/>
+            </circle>
+            <rect x="38" y="26" width="20" height="20" rx="3" fill="url(#dnCore2)"/>
+            <circle cx="48" cy="36" r="3" fill="#ffffff"/>
+            <path d="M48 50v14M40 56l8 8 8-8" fill="none" stroke="#f3f5fd" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <div style="text-align:center">
+            <div style="font-family:var(--font-display);font-size:1.3rem;font-weight:700;letter-spacing:0.08em">NODO</div>
+            <div style="font-size:0.75rem;color:var(--color-text-soft);letter-spacing:0.06em;margin-top:0.2rem">NATIVE ORTHOGONAL DATA OUTPUT</div>
+          </div>
+          <div class="pill-row" style="justify-content:center">
+            <span class="pill pill-blue">NSI</span>
+            <span class="pill pill-green">GDI</span>
+            <span class="pill pill-orange">PGI</span>
           </div>
         </aside>
       </div>
