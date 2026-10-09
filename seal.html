@@ -214,7 +214,7 @@ function selectMedium(m){
   document.getElementById('rMedium').textContent='Medium: '+m;
   /* Update button label to reflect medium */
   var btn=document.getElementById('revealBtn');
-  if(m==='video') btn.textContent='Open camera — photonic capture';
+  if(m==='video') btn.textContent='Open camera — scan barcode';
   else if(m==='audio') btn.textContent='Open microphone — scan audio';
   else btn.textContent='Run photonic seal scan';
 }
@@ -307,9 +307,10 @@ function drawQR(url){
 }
 
 /* ══════════════════════════════════════════════════════════
-   LIVE CAMERA SCAN — Photonic visual capture + SHA-256
-   Captures real video frames from the camera, extracts
-   pixel data, and hashes it cryptographically.
+   LIVE CAMERA SCAN — BarcodeDetector + getUserMedia
+   Opens camera, scans for a real barcode. The barcode data
+   becomes the evidence that feeds the governed chain.
+   The chain then produces a QR code for verification.
    ══════════════════════════════════════════════════════════ */
 function startCameraScan(){
   return new Promise(function(resolve,reject){
@@ -334,14 +335,10 @@ function startCameraScan(){
 
     var overlay=document.createElement('div');
     overlay.className='scan-overlay';
-    overlay.innerHTML='<div class="scan-corner tl"></div><div class="scan-corner tr"></div><div class="scan-corner bl"></div><div class="scan-corner br"></div><div class="scan-beam"></div><div class="scan-label">PHOTONIC CAPTURE</div>';
+    overlay.innerHTML='<div class="scan-corner tl"></div><div class="scan-corner tr"></div><div class="scan-corner bl"></div><div class="scan-corner br"></div><div class="scan-beam"></div><div class="scan-label">POINT CAMERA AT A BARCODE</div>';
 
-    /* Countdown display */
-    var countdownEl=document.createElement('div');
-    countdownEl.style.cssText='position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font:800 64px Inter,sans-serif;color:#d9ff7a;text-shadow:0 2px 12px rgba(0,0,0,.7);z-index:10;pointer-events:none;opacity:0;transition:opacity .2s';
     camDiv.appendChild(video);
     camDiv.appendChild(overlay);
-    camDiv.appendChild(countdownEl);
     sealArea.insertBefore(camDiv,sealArea.firstChild);
 
     navigator.mediaDevices.getUserMedia({
@@ -353,82 +350,54 @@ function startCameraScan(){
       video.onloadedmetadata=function(){
         video.play();
 
-        var captureCanvas=document.createElement('canvas');
-        var ctx=captureCanvas.getContext('2d');
-        var frames=[];
-        var frameCount=0;
-        var totalFrames=18; /* ~3 seconds at 6fps */
-        var captureInterval;
+        /* Try native BarcodeDetector */
+        if(typeof BarcodeDetector!=='undefined'){
+          var detector=new BarcodeDetector({formats:['qr_code','code_128','code_39','data_matrix','ean_13','ean_8','upc_a','upc_e']});
 
-        /* Show countdown: 3… 2… 1… */
-        var secondsLeft=3;
-        overlay.querySelector('.scan-label').textContent='CAPTURING IN '+secondsLeft+'...';
-        countdownEl.textContent=secondsLeft;
-        countdownEl.style.opacity='1';
-
-        var countdownTimer=setInterval(function(){
-          secondsLeft--;
-          if(secondsLeft>0){
-            countdownEl.textContent=secondsLeft;
-            overlay.querySelector('.scan-label').textContent='CAPTURING IN '+secondsLeft+'...';
-          }else{
-            clearInterval(countdownTimer);
-            countdownEl.style.opacity='0';
-            overlay.querySelector('.scan-label').textContent='CAPTURING VISUAL DATA';
-
-            /* Start capturing frames */
-            captureInterval=setInterval(function(){
-              if(!cameraStream||frameCount>=totalFrames){
-                clearInterval(captureInterval);
-                overlay.querySelector('.scan-label').textContent='HASHING VISUAL EVIDENCE';
-
-                /* Combine all frame data and hash */
-                var totalLen=0;
-                frames.forEach(function(f){totalLen+=f.length;});
-                var combined=new Uint8Array(totalLen);
-                var offset=0;
-                frames.forEach(function(f){combined.set(f,offset);offset+=f.length;});
-
-                crypto.subtle.digest('SHA-256',combined.buffer).then(function(hashBuf){
-                  var arr=new Uint8Array(hashBuf);
-                  var hex='';
-                  arr.forEach(function(b){hex+=b.toString(16).padStart(2,'0');});
-
-                  camDiv.classList.add('scan-detected');
-                  overlay.querySelector('.scan-label').textContent='VISUAL EVIDENCE CAPTURED';
-
-                  var w=captureCanvas.width;
-                  var h=captureCanvas.height;
-
-                  setTimeout(function(){
-                    stopCamera();
-                    resolve({
-                      data:hex,
-                      format:'photonic-visual',
-                      method:'CameraCapture',
-                      frames:frameCount,
-                      resolution:w+'x'+h,
-                      bytes:totalLen
-                    });
-                  },500);
-                });
+          function scanFrame(){
+            if(!cameraStream)return;
+            detector.detect(video).then(function(barcodes){
+              if(barcodes.length>0){
+                var data=barcodes[0].rawValue;
+                var format=barcodes[0].format;
+                camDiv.classList.add('scan-detected');
+                overlay.querySelector('.scan-label').textContent='BARCODE CAPTURED — '+format.toUpperCase();
+                setTimeout(function(){
+                  stopCamera();
+                  resolve({data:data,format:format,method:'BarcodeDetector'});
+                },400);
                 return;
               }
-
-              /* Capture one frame */
-              captureCanvas.width=video.videoWidth;
-              captureCanvas.height=video.videoHeight;
-              ctx.drawImage(video,0,0);
-              var imgData=ctx.getImageData(0,0,captureCanvas.width,captureCanvas.height);
-              frames.push(new Uint8Array(imgData.data.buffer));
-              frameCount++;
-
-              /* Update progress */
-              var pct=Math.round((frameCount/totalFrames)*100);
-              overlay.querySelector('.scan-label').textContent='CAPTURING VISUAL DATA — '+pct+'%';
-            },167); /* ~6 fps */
+              _scanRAF=requestAnimationFrame(scanFrame);
+            }).catch(function(){
+              _scanRAF=requestAnimationFrame(scanFrame);
+            });
           }
-        },1000);
+          setTimeout(function(){scanFrame()},300);
+
+        }else{
+          /* Fallback: capture a frame and hash it if no BarcodeDetector */
+          overlay.querySelector('.scan-label').textContent='CAPTURING VISUAL FRAME';
+          setTimeout(function(){
+            var c=document.createElement('canvas');
+            c.width=video.videoWidth;c.height=video.videoHeight;
+            c.getContext('2d').drawImage(video,0,0);
+            c.toBlob(function(blob){
+              blob.arrayBuffer().then(function(buf){
+                crypto.subtle.digest('SHA-256',buf).then(function(hashBuf){
+                  var arr=new Uint8Array(hashBuf);
+                  var hex='';arr.forEach(function(b){hex+=b.toString(16).padStart(2,'0');});
+                  camDiv.classList.add('scan-detected');
+                  overlay.querySelector('.scan-label').textContent='VISUAL FRAME CAPTURED';
+                  setTimeout(function(){
+                    stopCamera();
+                    resolve({data:hex,format:'visual-frame',method:'FrameCapture'});
+                  },400);
+                });
+              });
+            },'image/png');
+          },2000);
+        }
       };
     }).catch(function(err){
       if(camDiv.parentNode)camDiv.parentNode.removeChild(camDiv);
@@ -647,8 +616,9 @@ async function runPhotonScan(){
       return;
     }
 
-    btn.textContent='Visual evidence captured — running governed chain...';
-    setSampleStatus('Photonic capture complete ('+evidence.frames+' frames, '+evidence.resolution+', '+evidence.bytes+' bytes). SHA-256: '+evidence.data.substring(0,16)+'… Running governed chain.','working');
+    btn.textContent='Barcode captured — running governed chain...';
+    var evidencePreview=evidence.data.length>50?evidence.data.substring(0,50)+'…':evidence.data;
+    setSampleStatus('Live '+evidence.format+' read via '+evidence.method+': '+evidencePreview+'. Running governed chain.','working');
 
   /* ── AUDIO: Live microphone acoustic scan ── */
   }else if(selectedMedium==='audio'){
@@ -852,7 +822,7 @@ function resetAll(){
   var btn=document.getElementById('revealBtn');
   btn.disabled=false;btn.style.opacity='1';
   btn.style.background='#287f45';btn.style.color='#fff';btn.style.border='none';
-  if(selectedMedium==='video') btn.textContent='Open camera — photonic capture';
+  if(selectedMedium==='video') btn.textContent='Open camera — scan barcode';
   else if(selectedMedium==='audio') btn.textContent='Open microphone — scan audio';
   else btn.textContent='Run photonic seal scan';
   document.getElementById('resetBtn').style.display='none';
