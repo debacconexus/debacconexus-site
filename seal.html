@@ -760,13 +760,19 @@ async function runPhotonScan(){
   document.getElementById('receiptPanel').style.opacity='1';
   document.getElementById('receiptPanel').style.transform='translateY(0)';
 
-  /* Build QR */
+  /* Build QR — keep URL short and clean for phone scanners */
   setTimeout(function(){
+    var qrStatus=released?'GREEN':'YELLOW';
     var qrUrl;
     if(passport&&passport.token){
-      qrUrl=location.origin+'/seal-verify.html?t='+encodeURIComponent(passport.token)+'&medium='+selectedMedium+'&status='+encodeURIComponent(status);
+      qrUrl=location.origin+'/seal-verify.html?t='+encodeURIComponent(passport.token)+'&medium='+selectedMedium+'&status='+qrStatus;
     }else{
-      var params=new URLSearchParams({medium:selectedMedium,tok:totalTokens===null?'':String(totalTokens),energy:energy===null?'':String(energy),water:water===null?'':String(water),co2:co2===null?'':String(co2),hash:hash,sig:sig?sig.substring(0,88):'',ts:ts,status:status});
+      var params=new URLSearchParams({medium:selectedMedium,hash:hash,status:qrStatus,ts:ts});
+      if(sig)params.set('sig',sig.substring(0,44));
+      if(totalTokens!==null)params.set('tok',String(totalTokens));
+      if(energy!==null)params.set('energy',String(energy));
+      if(co2!==null)params.set('co2',String(co2));
+      if(water!==null)params.set('water',String(water));
       qrUrl=location.origin+'/seal-verify.html?'+params.toString();
     }
     drawQR(qrUrl);
