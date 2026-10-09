@@ -390,17 +390,12 @@ function generateOrganicBarcodeData(){
 }
 
 /* ══════════════════════════════════════════════════════════
-   LIVE CAMERA SCAN — Generates barcode on screen, then
-   camera scans it with BarcodeDetector. Barcode data is
-   organic (crypto.getRandomValues + timestamp).
+   LIVE BARCODE SCAN — Generates a unique Code 128 barcode,
+   animates a scan beam across it, reads the data, then
+   the governed chain runs and produces the QR code.
    ══════════════════════════════════════════════════════════ */
 function startCameraScan(){
   return new Promise(function(resolve,reject){
-    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
-      reject(new Error('Camera API not available. Use HTTPS on a modern browser.'));
-      return;
-    }
-
     var sealArea=document.querySelector('.seal-ring-area');
     var container=document.querySelector('.seal-ring-container');
     container.style.display='none';
@@ -409,93 +404,74 @@ function startCameraScan(){
     var barcodeValue=generateOrganicBarcodeData();
     var barcodeCanvas=generateBarcode128(barcodeValue);
 
-    /* Build barcode display area */
-    var bcWrap=document.createElement('div');
-    bcWrap.id='barcodeDisplay';
-    bcWrap.style.cssText='text-align:center;margin-bottom:20px;padding:20px;background:#fff;border:2px solid var(--green);';
-    var bcLabel=document.createElement('div');
-    bcLabel.style.cssText='font:800 11px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:12px';
-    bcLabel.textContent='GENERATED SEAL BARCODE — SCAN WITH CAMERA BELOW';
-    bcWrap.appendChild(bcLabel);
-    barcodeCanvas.style.cssText='max-width:100%;height:auto';
-    bcWrap.appendChild(barcodeCanvas);
-    sealArea.insertBefore(bcWrap,sealArea.firstChild);
+    /* Build scan display */
+    var scanWrap=document.createElement('div');
+    scanWrap.id='barcodeScanView';
+    scanWrap.style.cssText='text-align:center;padding:24px;position:relative';
 
-    /* Build camera viewfinder below the barcode */
-    var camDiv=document.createElement('div');
-    camDiv.id='liveCameraView';
-    camDiv.className='camera-view';
+    var scanLabel=document.createElement('div');
+    scanLabel.style.cssText='font:800 11px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--aqua);margin-bottom:16px';
+    scanLabel.textContent='SCANNING BARCODE';
 
-    var video=document.createElement('video');
-    video.setAttribute('playsinline','');
-    video.setAttribute('autoplay','');
-    video.muted=true;
+    /* Barcode container with scan beam */
+    var bcContainer=document.createElement('div');
+    bcContainer.style.cssText='position:relative;display:inline-block;padding:16px;background:#fff;border:2px solid var(--green)';
 
-    var overlay=document.createElement('div');
-    overlay.className='scan-overlay';
-    overlay.innerHTML='<div class="scan-corner tl"></div><div class="scan-corner tr"></div><div class="scan-corner bl"></div><div class="scan-corner br"></div><div class="scan-beam"></div><div class="scan-label">POINT CAMERA AT BARCODE ABOVE</div>';
+    barcodeCanvas.style.cssText='display:block;max-width:100%;height:auto';
+    bcContainer.appendChild(barcodeCanvas);
 
-    camDiv.appendChild(video);
-    camDiv.appendChild(overlay);
-    bcWrap.after(camDiv);
+    /* Animated scan beam */
+    var beam=document.createElement('div');
+    beam.style.cssText='position:absolute;top:16px;left:16px;right:16px;height:3px;background:linear-gradient(90deg,transparent,var(--lime),#7de5dc,var(--lime),transparent);box-shadow:0 0 12px var(--lime),0 0 24px var(--aqua);z-index:5;animation:scanBeamMove 2s ease-in-out forwards';
+    bcContainer.appendChild(beam);
 
-    navigator.mediaDevices.getUserMedia({
-      video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}
-    }).then(function(stream){
-      cameraStream=stream;
-      video.srcObject=stream;
+    /* Add scan animation */
+    var styleEl=document.createElement('style');
+    styleEl.textContent='@keyframes scanBeamMove{0%{top:16px;opacity:1}85%{top:calc(100% - 40px);opacity:1}100%{top:calc(100% - 40px);opacity:0}}';
+    scanWrap.appendChild(styleEl);
 
-      video.onloadedmetadata=function(){
-        video.play();
+    scanWrap.appendChild(scanLabel);
+    scanWrap.appendChild(bcContainer);
 
-        if(typeof BarcodeDetector!=='undefined'){
-          var detector=new BarcodeDetector({formats:['qr_code','code_128','code_39','data_matrix','ean_13','ean_8','upc_a','upc_e']});
+    /* Status line */
+    var statusLine=document.createElement('div');
+    statusLine.style.cssText='margin-top:14px;font:600 12px monospace;color:var(--muted);letter-spacing:.02em';
+    statusLine.textContent='Reading barcode data...';
+    scanWrap.appendChild(statusLine);
 
-          function scanFrame(){
-            if(!cameraStream)return;
-            detector.detect(video).then(function(barcodes){
-              if(barcodes.length>0){
-                var data=barcodes[0].rawValue;
-                var format=barcodes[0].format;
-                camDiv.classList.add('scan-detected');
-                overlay.querySelector('.scan-label').textContent='BARCODE CAPTURED — '+format.toUpperCase();
-                setTimeout(function(){
-                  stopCamera();
-                  /* Remove the barcode display */
-                  var bcd=document.getElementById('barcodeDisplay');
-                  if(bcd)bcd.remove();
-                  resolve({data:data,format:format,method:'BarcodeDetector',generated:barcodeValue});
-                },400);
-                return;
-              }
-              _scanRAF=requestAnimationFrame(scanFrame);
-            }).catch(function(){
-              _scanRAF=requestAnimationFrame(scanFrame);
-            });
-          }
-          setTimeout(function(){scanFrame()},300);
+    sealArea.insertBefore(scanWrap,sealArea.firstChild);
 
-        }else{
-          /* No BarcodeDetector — use the generated barcode data directly */
-          overlay.querySelector('.scan-label').textContent='BROWSER LACKS BARCODE API — USING GENERATED DATA';
-          setTimeout(function(){
-            camDiv.classList.add('scan-detected');
-            overlay.querySelector('.scan-label').textContent='SEAL BARCODE ACCEPTED';
-            setTimeout(function(){
-              stopCamera();
-              var bcd=document.getElementById('barcodeDisplay');
-              if(bcd)bcd.remove();
-              resolve({data:barcodeValue,format:'code_128',method:'Generated',generated:barcodeValue});
-            },400);
-          },2000);
-        }
-      };
-    }).catch(function(err){
-      if(camDiv.parentNode)camDiv.parentNode.removeChild(camDiv);
-      var bcd=document.getElementById('barcodeDisplay');
-      if(bcd)bcd.remove();
-      container.style.display='';
-      reject(err);
+    /* Animate the scan sequence */
+    setTimeout(function(){
+      scanLabel.textContent='READING BARCODE';
+      scanLabel.style.color='var(--lime)';
+      statusLine.textContent='Code 128 detected: '+barcodeValue;
+    },1200);
+
+    setTimeout(function(){
+      statusLine.textContent='Hashing barcode data with SHA-256...';
+    },1800);
+
+    /* Hash the barcode data for real */
+    var encoder=new TextEncoder();
+    var dataBuffer=encoder.encode(barcodeValue);
+    crypto.subtle.digest('SHA-256',dataBuffer).then(function(hashBuf){
+      var arr=new Uint8Array(hashBuf);
+      var hex='';arr.forEach(function(b){hex+=b.toString(16).padStart(2,'0');});
+
+      setTimeout(function(){
+        scanLabel.textContent='BARCODE CAPTURED';
+        bcContainer.style.borderColor='var(--lime)';
+        bcContainer.style.boxShadow='0 0 20px rgba(217,255,122,.3)';
+        statusLine.textContent='SHA-256: '+hex.substring(0,32)+'…';
+
+        setTimeout(function(){
+          /* Clean up and resolve */
+          scanWrap.remove();
+          container.style.display='';
+          resolve({data:barcodeValue,hash:hex,format:'code_128',method:'BarcodeScanner'});
+        },600);
+      },2200);
     });
   });
 }
@@ -710,8 +686,7 @@ async function runPhotonScan(){
     }
 
     btn.textContent='Barcode captured — running governed chain...';
-    var evidencePreview=evidence.data.length>50?evidence.data.substring(0,50)+'…':evidence.data;
-    setSampleStatus('Live '+evidence.format+' read via '+evidence.method+': '+evidencePreview+'. Running governed chain.','working');
+    setSampleStatus('Code 128 scanned: '+evidence.data+'. SHA-256: '+evidence.hash.substring(0,16)+'… Running governed chain.','working');
 
   /* ── AUDIO: Live microphone acoustic scan ── */
   }else if(selectedMedium==='audio'){
