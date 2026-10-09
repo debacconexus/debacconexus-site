@@ -390,9 +390,9 @@ function generateOrganicBarcodeData(){
 }
 
 /* ══════════════════════════════════════════════════════════
-   LIVE BARCODE SCAN — Generates a unique Code 128 barcode,
-   animates a scan beam across it, reads the data, then
-   the governed chain runs and produces the QR code.
+   LIVE BARCODE SCAN — Barcode appears INSIDE the scanner
+   viewfinder. Scan beam sweeps across it. Data is read,
+   hashed, and fed into the governed chain → QR code.
    ══════════════════════════════════════════════════════════ */
 function startCameraScan(){
   return new Promise(function(resolve,reject){
@@ -400,74 +400,78 @@ function startCameraScan(){
     var container=document.querySelector('.seal-ring-container');
     container.style.display='none';
 
-    /* Generate organic barcode data and render it */
+    /* Generate organic barcode data */
     var barcodeValue=generateOrganicBarcodeData();
     var barcodeCanvas=generateBarcode128(barcodeValue);
 
-    /* Build scan display */
-    var scanWrap=document.createElement('div');
-    scanWrap.id='barcodeScanView';
-    scanWrap.style.cssText='text-align:center;padding:24px;position:relative';
+    /* Scanner viewfinder — barcode sits INSIDE it */
+    var scanBox=document.createElement('div');
+    scanBox.id='barcodeScanView';
+    scanBox.className='camera-view';
+    scanBox.style.cssText='position:relative;width:320px;height:220px;margin:0 auto;background:#0a0a0a;border:2px solid rgba(125,229,220,.3);overflow:hidden;display:flex;align-items:center;justify-content:center';
 
-    var scanLabel=document.createElement('div');
-    scanLabel.style.cssText='font:800 11px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--aqua);margin-bottom:16px';
-    scanLabel.textContent='SCANNING BARCODE';
+    /* Corner brackets */
+    var corners=document.createElement('div');
+    corners.className='scan-overlay';
+    corners.innerHTML='<div class="scan-corner tl"></div><div class="scan-corner tr"></div><div class="scan-corner bl"></div><div class="scan-corner br"></div>';
+    corners.style.cssText='position:absolute;inset:0;pointer-events:none;z-index:3';
+    scanBox.appendChild(corners);
 
-    /* Barcode container with scan beam */
-    var bcContainer=document.createElement('div');
-    bcContainer.style.cssText='position:relative;display:inline-block;padding:16px;background:#fff;border:2px solid var(--green)';
+    /* Barcode inside the scanner — sized to fit */
+    barcodeCanvas.style.cssText='position:relative;z-index:1;width:260px;height:auto;image-rendering:pixelated';
+    scanBox.appendChild(barcodeCanvas);
 
-    barcodeCanvas.style.cssText='display:block;max-width:100%;height:auto';
-    bcContainer.appendChild(barcodeCanvas);
-
-    /* Animated scan beam */
+    /* Scan beam that sweeps across the barcode */
     var beam=document.createElement('div');
-    beam.style.cssText='position:absolute;top:16px;left:16px;right:16px;height:3px;background:linear-gradient(90deg,transparent,var(--lime),#7de5dc,var(--lime),transparent);box-shadow:0 0 12px var(--lime),0 0 24px var(--aqua);z-index:5;animation:scanBeamMove 2s ease-in-out forwards';
-    bcContainer.appendChild(beam);
+    beam.style.cssText='position:absolute;left:8px;right:8px;height:3px;background:linear-gradient(90deg,transparent 0%,var(--lime) 20%,#7de5dc 50%,var(--lime) 80%,transparent 100%);box-shadow:0 0 8px var(--lime),0 0 20px var(--aqua);z-index:4;top:10px;animation:bcScanBeam 1.8s ease-in-out forwards';
+    scanBox.appendChild(beam);
 
-    /* Add scan animation */
     var styleEl=document.createElement('style');
-    styleEl.textContent='@keyframes scanBeamMove{0%{top:16px;opacity:1}85%{top:calc(100% - 40px);opacity:1}100%{top:calc(100% - 40px);opacity:0}}';
-    scanWrap.appendChild(styleEl);
+    styleEl.textContent='@keyframes bcScanBeam{0%{top:10px;opacity:1}45%{top:calc(50% + 30px);opacity:1}55%{top:calc(50% - 30px);opacity:1}90%{top:calc(100% - 20px);opacity:1}100%{top:calc(100% - 20px);opacity:0}}';
+    scanBox.appendChild(styleEl);
 
-    scanWrap.appendChild(scanLabel);
-    scanWrap.appendChild(bcContainer);
+    /* Label below scanner */
+    var label=document.createElement('div');
+    label.style.cssText='text-align:center;margin-top:12px;font:800 11px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--aqua)';
+    label.textContent='SCANNING BARCODE';
 
-    /* Status line */
     var statusLine=document.createElement('div');
-    statusLine.style.cssText='margin-top:14px;font:600 12px monospace;color:var(--muted);letter-spacing:.02em';
+    statusLine.style.cssText='text-align:center;margin-top:8px;font:600 11px monospace;color:var(--muted)';
     statusLine.textContent='Reading barcode data...';
-    scanWrap.appendChild(statusLine);
 
-    sealArea.insertBefore(scanWrap,sealArea.firstChild);
+    var wrap=document.createElement('div');
+    wrap.id='barcodeScanWrap';
+    wrap.appendChild(scanBox);
+    wrap.appendChild(label);
+    wrap.appendChild(statusLine);
+    sealArea.insertBefore(wrap,sealArea.firstChild);
 
-    /* Animate the scan sequence */
+    /* Animate scan sequence */
     setTimeout(function(){
-      scanLabel.textContent='READING BARCODE';
-      scanLabel.style.color='var(--lime)';
-      statusLine.textContent='Code 128 detected: '+barcodeValue;
+      label.textContent='CODE 128 DETECTED';
+      label.style.color='var(--lime)';
+      statusLine.textContent=barcodeValue;
     },1200);
 
     setTimeout(function(){
-      statusLine.textContent='Hashing barcode data with SHA-256...';
+      label.textContent='HASHING BARCODE DATA';
+      statusLine.textContent='SHA-256 via Web Crypto...';
     },1800);
 
-    /* Hash the barcode data for real */
+    /* Hash the barcode data */
     var encoder=new TextEncoder();
-    var dataBuffer=encoder.encode(barcodeValue);
-    crypto.subtle.digest('SHA-256',dataBuffer).then(function(hashBuf){
+    crypto.subtle.digest('SHA-256',encoder.encode(barcodeValue)).then(function(hashBuf){
       var arr=new Uint8Array(hashBuf);
       var hex='';arr.forEach(function(b){hex+=b.toString(16).padStart(2,'0');});
 
       setTimeout(function(){
-        scanLabel.textContent='BARCODE CAPTURED';
-        bcContainer.style.borderColor='var(--lime)';
-        bcContainer.style.boxShadow='0 0 20px rgba(217,255,122,.3)';
+        scanBox.style.borderColor='var(--lime)';
+        scanBox.style.boxShadow='0 0 24px rgba(217,255,122,.25)';
+        label.textContent='BARCODE CAPTURED';
         statusLine.textContent='SHA-256: '+hex.substring(0,32)+'…';
 
         setTimeout(function(){
-          /* Clean up and resolve */
-          scanWrap.remove();
+          wrap.remove();
           container.style.display='';
           resolve({data:barcodeValue,hash:hex,format:'code_128',method:'BarcodeScanner'});
         },600);
