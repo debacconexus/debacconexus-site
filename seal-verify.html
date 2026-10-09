@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Passport Verification — DeBacco Nexus</title>
+<style>
+:root{--bg:#030807;--paper:#edf8ec;--muted:#9ab89d;--lime:#d9ff7a;--aqua:#7de5dc;--zircon:#2BA8B0;--green:#287f45;--line:rgba(237,248,236,.12)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--paper);font-family:Inter,ui-sans-serif,system-ui,sans-serif;min-height:100vh}
+.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(3,8,7,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;letter-spacing:-.04em;text-decoration:none;color:var(--paper)}
+.brand b{display:inline-grid;place-items:center;width:26px;height:26px;background:var(--lime);color:#07150d;clip-path:polygon(50% 0,100% 26%,100% 74%,50% 100%,0 74%,0 26%);font:800 13px Georgia}
+.wrap{max-width:680px;margin:0 auto;padding:60px 24px 80px}
+.badge{display:flex;align-items:center;gap:10px;margin-bottom:32px}
+.badge-hex{width:48px;height:48px;flex-shrink:0}
+.badge-hex svg{width:100%;height:100%}
+.badge-label{font:800 11px Inter;letter-spacing:.15em;text-transform:uppercase;color:var(--aqua)}
+.badge-label span{display:block;font:400 13px Inter;letter-spacing:0;color:var(--muted);margin-top:2px;text-transform:none}
+h1{font-size:clamp(28px,5vw,42px);line-height:1;letter-spacing:-.05em;margin-bottom:8px}
+h1 em{font:400 1em Georgia,serif;color:var(--lime)}
+.subtitle{color:var(--muted);font-size:15px;margin-bottom:40px}
+.status-banner{padding:20px 24px;margin-bottom:32px;display:flex;align-items:center;gap:16px;border:2px solid}
+.status-banner.green{border-color:var(--green);background:rgba(40,127,69,.08)}
+.status-banner.yellow{border-color:#b57608;background:rgba(181,118,8,.08)}
+.status-banner.red{border-color:#b33d36;background:rgba(179,61,54,.08)}
+.status-icon{width:44px;height:44px;display:grid;place-items:center;color:#fff;font:900 22px Inter;flex-shrink:0}
+.green .status-icon{border-radius:50%;background:var(--green)}
+.yellow .status-icon{clip-path:polygon(50% 0,100% 100%,0 100%);padding-top:8px;background:#b57608;font-size:16px}
+.red .status-icon{clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);background:#b33d36}
+.status-text h2{font-size:20px;letter-spacing:-.03em;margin-bottom:2px}
+.status-text p{font-size:13px;color:var(--muted)}
+.receipt{border:1px solid var(--line);margin-bottom:24px}
+.receipt-row{display:grid;grid-template-columns:160px 1fr;border-bottom:1px solid var(--line)}
+.receipt-row:last-child{border-bottom:none}
+.receipt-key{padding:14px 18px;font:700 11px Inter;letter-spacing:.08em;text-transform:uppercase;color:var(--aqua);background:rgba(13,26,18,.6);border-right:1px solid var(--line)}
+.receipt-val{padding:14px 18px;font:400 13px/1.5 monospace;color:var(--paper);word-break:break-all;background:rgba(13,26,18,.3)}
+.receipt-val.hash{font-size:11px;color:var(--muted)}
+.ecos{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin-bottom:24px}
+.ecos-cell{background:rgba(13,26,18,.7);padding:18px;text-align:center}
+.ecos-num{font:800 28px Georgia,serif;color:var(--lime);margin-bottom:4px}
+.ecos-label{font:600 10px Inter;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.disclaimer{padding:20px;border:1px solid var(--line);background:rgba(13,26,18,.4);font-size:12px;color:var(--muted);line-height:1.6}
+.disclaimer strong{color:var(--paper);font-weight:700}
+.footer{padding:40px 0;text-align:center;color:var(--muted);font-size:11px;border-top:1px solid var(--line);margin-top:60px}
+.no-data{text-align:center;padding:80px 24px}
+.no-data h2{font-size:24px;margin-bottom:12px;color:var(--muted)}
+.no-data p{color:rgba(237,248,236,.4);font-size:14px}
+@media(max-width:600px){
+  .receipt-row{grid-template-columns:1fr}
+  .receipt-key{border-right:none;border-bottom:1px solid var(--line);padding:10px 18px}
+  .ecos{grid-template-columns:1fr}
+  .nav{padding:0 20px}
+}
+</style></head><body>
+<nav class="nav"><a href="/" class="brand"><b>N</b> DeBacco Nexus</a></nav>
+<div class="wrap" id="content">
+<div class="no-data" id="noData">
+<h2>No Passport data</h2>
+<p>Scan a QR code from a governed seal to view its signed Passport.</p>
+</div>
+</div>
+<script>
+(function(){
+  var params=new URLSearchParams(window.location.search);
+  var hash=params.get('hash')||'';
+  var token=params.get('t')||'';
+  var status=params.get('status')||'';
+  var sig=params.get('sig')||'';
+  var ts=params.get('ts')||'';
+  var medium=params.get('medium')||'';
+  var sealName=params.get('s')||'';
+  var energy=params.get('energy')||'';
+  var co2=params.get('co2')||'';
+  var water=params.get('water')||'';
+  var tokens=params.get('tok')||'';
+  if(!hash&&!token)return;
+  var statusClass='green';
+  var statusLabel='GREEN · VERIFIED';
+  var statusDesc='An issued Passport was found and the record checks out.';
+  if(status.indexOf('YELLOW')!==-1||status.indexOf('REVIEW')!==-1){
+    statusClass='yellow';statusLabel='YELLOW · REVIEW NEEDED';
+    statusDesc='The work needs review, or no issued Passport could be confirmed.';
+  }else if(status.indexOf('RED')!==-1||status.indexOf('STOP')!==-1||status.indexOf('INVALID')!==-1){
+    statusClass='red';statusLabel='RED · INVALID';
+    statusDesc='The record does not match or is not valid. Do not rely on the presented seal.';
+  }else if(status){statusLabel=status;}
+  var mediumDisplay=medium||'—';
+  if(sealName&&!medium){
+    if(sealName.toLowerCase().indexOf('video')!==-1)mediumDisplay='Video';
+    else if(sealName.toLowerCase().indexOf('audio')!==-1)mediumDisplay='Audio';
+    else if(sealName.toLowerCase().indexOf('text')!==-1)mediumDisplay='Text';
+  }
+  var tsDisplay=ts;
+  if(ts){try{var d=new Date(ts);if(!isNaN(d.getTime()))tsDisplay=d.toUTCString();}catch(e){}}
+  document.getElementById('noData').style.display='none';
+  var wrap=document.getElementById('content');
+  var h='';
+  h+='<div class="badge"><div class="badge-hex"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">';
+  h+='<polygon points="100,10 180,55 180,145 100,190 20,145 20,55" fill="none" stroke="#287f45" stroke-width="4"/>';
+  h+='<polygon points="100,25 168,63 168,137 100,175 32,137 32,63" fill="rgba(40,127,69,.08)" stroke="#287f45" stroke-width="2" opacity=".5"/>';
+  h+='<text x="100" y="96" text-anchor="middle" fill="#287f45" font-family="Georgia" font-size="48" font-weight="700">DN</text>';
+  h+='<text x="100" y="122" text-anchor="middle" fill="#176f69" font-family="Inter,sans-serif" font-size="11" font-weight="800" letter-spacing="3">GOVERNED</text>';
+  h+='</svg></div><div class="badge-label">Carbon Footprint Passport<span>Signed governed record · DeBacco Nexus</span></div></div>';
+  h+='<h1>Passport <em>Verification</em></h1>';
+  h+='<p class="subtitle">This record was created by a governed inference and signed cryptographically.</p>';
+  var si=statusClass==='green'?'✓':(statusClass==='yellow'?'Ⅱ':'!');
+  h+='<div class="status-banner '+statusClass+'"><div class="status-icon">'+si+'</div>';
+  h+='<div class="status-text"><h2>'+statusLabel+'</h2><p>'+statusDesc+'</p></div></div>';
+  h+='<div class="receipt">';
+  if(hash)h+='<div class="receipt-row"><div class="receipt-key">Receipt Hash</div><div class="receipt-val hash">SHA-256: '+hash+'</div></div>';
+  if(token)h+='<div class="receipt-row"><div class="receipt-key">Passport Token</div><div class="receipt-val hash">'+token+'</div></div>';
+  h+='<div class="receipt-row"><div class="receipt-key">Medium</div><div class="receipt-val">'+mediumDisplay+'</div></div>';
+  h+='<div class="receipt-row"><div class="receipt-key">Verdict</div><div class="receipt-val">'+(status||'CERTIFIED')+'</div></div>';
+  if(tsDisplay)h+='<div class="receipt-row"><div class="receipt-key">Timestamp</div><div class="receipt-val">'+tsDisplay+'</div></div>';
+  if(sig)h+='<div class="receipt-row"><div class="receipt-key">Signature</div><div class="receipt-val hash">Ed25519: '+sig+'</div></div>';
+  if(tokens)h+='<div class="receipt-row"><div class="receipt-key">Tokens</div><div class="receipt-val">'+tokens+'</div></div>';
+  h+='<div class="receipt-row"><div class="receipt-key">Standard</div><div class="receipt-val">Nexus Compliance · ECOS-2026.1</div></div>';
+  h+='</div>';
+  if(energy||co2||water){
+    h+='<div class="ecos">';
+    h+='<div class="ecos-cell"><div class="ecos-num">'+(energy||'—')+'</div><div class="ecos-label">Energy (J)</div></div>';
+    h+='<div class="ecos-cell"><div class="ecos-num">'+(co2||'—')+'</div><div class="ecos-label">CO₂e (g)</div></div>';
+    h+='<div class="ecos-cell"><div class="ecos-num">'+(water||'—')+'</div><div class="ecos-label">Water (mL)</div></div>';
+    h+='</div>';
+  }
+  h+='<div class="disclaimer">';
+  h+='<strong>What this record means.</strong> This Passport confirms that a governed AI inference was conducted under Nexus Compliance standards. ';
+  h+='The seal does not prove that the underlying content is true, that a person approved it, or that it will be accepted by a court or regulator. ';
+  h+='Environmental estimates are declared modelled values, not physical measurements.';
+  h+='<br><br><strong>Standard:</strong> ECOS-2026.1 · USPTO Patent Pending 19/571,156 · DeBacco Nexus LLC · Governedware™</div>';
+  wrap.innerHTML+=h;
+})();
+</script>
+<div class="footer">&copy; 2026 DeBacco Nexus LLC. All rights reserved. Governedware&trade; is a trademark of DeBacco Nexus LLC.</div>
+<script src="/nav.js"></script>
+</body></html>

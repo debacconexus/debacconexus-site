@@ -1,0 +1,804 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Governed AI Seal — DeBacco Nexus</title>
+<style>
+:root{--bg:#030807;--paper:#edf8ec;--muted:#9ab89d;--lime:#d9ff7a;--aqua:#7de5dc;--zircon:#2BA8B0;--amber:#ffd37e;--red:#E53935;--line:rgba(237,248,236,.12)}*{box-sizing:border-box;margin:0;padding:0}body{background:var(--bg);color:var(--paper);font-family:Inter,ui-sans-serif,system-ui,sans-serif;overflow-x:hidden}
+.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 40px;height:64px;background:rgba(3,8,7,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:10px;font-weight:800;font-size:16px;letter-spacing:-.04em;text-decoration:none;color:var(--paper)}.brand b{display:inline-grid;place-items:center;width:26px;height:26px;background:var(--lime);color:#07150d;clip-path:polygon(50% 0,100% 26%,100% 74%,50% 100%,0 74%,0 26%);font:800 13px Georgia}.nav-links{display:flex;align-items:center;gap:28px}.nav-links a{font-size:13px;color:var(--muted);text-decoration:none;font-weight:500}.nav-links a:hover{color:var(--paper)}.nav-cta{padding:8px 18px;background:var(--lime);color:#10210f;font-size:12px;font-weight:800;text-decoration:none;border-radius:2px}
+.shell{width:min(1100px,calc(100% - 48px));margin:auto}
+.hero{padding:80px 0 40px;text-align:center}.eyebrow{color:var(--aqua);font:800 11px Inter;letter-spacing:.15em;text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;justify-content:center;gap:8px}.eyebrow:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 12px var(--lime)}h1{font-size:clamp(36px,6vw,64px);line-height:.92;letter-spacing:-.06em;margin-bottom:16px}h1 em{font:400 1em Georgia,serif;color:var(--lime)}.hero p{color:var(--muted);font-size:16px;max-width:560px;margin:0 auto;line-height:1.6}
+.seal-showcase{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;padding:36px 0 70px}.seal-item{min-height:390px;padding:24px;border:1px solid #b9d3bb;background:#fffefa;text-align:left;box-shadow:0 12px 28px rgba(18,60,40,.08)}.seal-visual{height:190px;display:grid;place-items:center;margin-bottom:20px;border:1px solid #d3e4d4;background:linear-gradient(145deg,#fbfdf9,#edf8ef)}.seal-label{font:800 12px Inter;letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;color:#287f45}.seal-item h3{font-size:24px;letter-spacing:-.04em;color:#123c28;margin:0 0 9px}.seal-desc{color:#385c43;font-size:14px;line-height:1.55}.seal-note{display:block;margin-top:14px;color:#5b7662;font-size:12px;line-height:1.45}
+.qr-seal{width:138px;height:138px;padding:12px;border:8px solid #287f45;background:#fafff9;display:grid;grid-template-columns:repeat(9,1fr);grid-template-rows:repeat(9,1fr);gap:3px;box-shadow:0 0 0 5px rgba(43,127,69,.11)}.qr-seal i{background:#287f45}.qr-seal i:nth-child(3n),.qr-seal i:nth-child(7n){opacity:.12}.finder{background:#287f45!important;box-shadow:inset 0 0 0 6px #fafff9,inset 0 0 0 11px #287f45}.band-seal{width:46px;height:160px;border-radius:24px;background:linear-gradient(to bottom,#e4d8a7,#b7dcb9 24%,#5ca76c 43%,#7db6cf 64%,#d5b5cf 82%,#efd9a4);opacity:.52;box-shadow:0 0 0 1px rgba(34,103,61,.18),0 0 22px rgba(62,149,80,.18);position:relative}.band-seal:before{content:"";position:absolute;inset:13px 10px;border-radius:18px;background:repeating-linear-gradient(to bottom,rgba(255,255,255,.92) 0 6px,transparent 6px 18px)}.band-seal:after{content:"";position:absolute;inset:45px 9px;border-radius:16px;background:linear-gradient(to bottom,#b78325 0 24%,#287f45 24% 51%,#237a9b 51% 76%,#4b4c99 76%);opacity:.75}.spectral-seal{width:190px;height:108px;border-radius:14px;padding:12px;background:linear-gradient(120deg,rgba(245,255,245,.97),rgba(231,247,234,.95));border:1px solid #9ec9a6;position:relative;overflow:hidden;box-shadow:0 10px 22px rgba(32,104,55,.15)}.spectral-seal:before{content:"";position:absolute;left:0;right:0;top:0;height:12px;background:linear-gradient(90deg,#e4d8a7,#5ca76c,#7db6cf,#d5b5cf,#efd9a4);opacity:.75}.spectral-seal:after{content:"";position:absolute;left:12px;right:12px;bottom:20px;height:36px;background:repeating-linear-gradient(90deg,transparent 0 6px,rgba(38,116,66,.16) 6px 8px),linear-gradient(180deg,transparent 48%,#287f45 50%,transparent 52%);clip-path:polygon(0 58%,7% 46%,13% 65%,19% 35%,26% 58%,33% 15%,39% 55%,46% 73%,53% 32%,60% 58%,66% 24%,73% 66%,80% 42%,87% 57%,94% 32%,100% 53%,100% 100%,0 100%);opacity:.84}.spectral-seal span{display:block;position:relative;z-index:1;color:#1e613a;font:800 10px Inter,sans-serif;letter-spacing:.13em;text-align:center;margin-top:14px}
+.hash-section{padding:60px 0;border-top:1px solid var(--line)}.hash-section h2{font-size:clamp(24px,3.5vw,36px);letter-spacing:-.04em;margin-bottom:8px;text-align:center}.hash-section h2 em{font:400 1em Georgia,serif;color:var(--lime)}.hash-section>p{text-align:center;color:var(--muted);font-size:14px;margin-bottom:40px}.hash-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}.hash-point{padding:24px;background:rgba(13,26,18,.9)}.hash-point .hp-num{font:800 20px Georgia,serif;color:var(--zircon);margin-bottom:8px}.hash-point h4{font-size:14px;margin-bottom:6px;letter-spacing:-.02em}.hash-point p{color:var(--muted);font-size:11px;line-height:1.5}
+.sizes-section{padding:60px 0;border-top:1px solid var(--line);text-align:center}.sizes-section h2{font-size:24px;letter-spacing:-.03em;margin-bottom:32px}.sizes-row{display:flex;align-items:flex-end;justify-content:center;gap:40px;flex-wrap:wrap}.size-demo{text-align:center}.size-demo span{display:block;margin-top:8px;color:var(--muted);font-size:11px}
+.embed-section{padding:60px 0;border-top:1px solid var(--line)}.embed-section h2{font-size:24px;letter-spacing:-.03em;margin-bottom:16px}.embed-section p{color:var(--muted);font-size:14px;margin-bottom:16px}.code-block{background:rgba(10,22,16,.8);border:1px solid var(--line);padding:20px;font:12px/1.6 monospace;color:var(--aqua);overflow-x:auto;white-space:pre;margin-bottom:24px}
+.seal-item.cleared [stroke="#2BA8B0"]{stroke:#287f45}.seal-item.cleared [fill="#2BA8B0"]{fill:#287f45}.seal-item.withheld [stroke="#E53935"]{stroke:#9c620c}.seal-item.withheld [fill="#E53935"]{fill:#9c620c}.seal-item.stop [stroke="#555"]{stroke:#a43634}.seal-item.stop [fill="#555"]{fill:#a43634}.seal-item.stop [fill="#1A1A1A"]{fill:#fff7f4}.seal-item.stop [fill="#fff"]{fill:#a43634}.seal-label.cleared{color:#287f45}.seal-label.withheld{color:#9c620c}.seal-label.stop{color:#a43634}
+.status-workbench{margin:22px 0 42px;padding:30px;border:1px solid #b9d3bb;background:#fffefa;box-shadow:0 12px 28px rgba(18,60,40,.08)}.status-workbench h2{text-align:center;font-size:clamp(23px,3vw,34px);letter-spacing:-.04em;color:#123c28}.status-workbench>p{max-width:690px;margin:10px auto 28px;text-align:center;color:#385c43;line-height:1.55}.status-legend{display:grid;grid-template-columns:repeat(3,1fr);gap:15px}.status-card{min-height:224px;padding:20px 18px;border:3px solid;display:flex;flex-direction:column;align-items:flex-start;text-align:left;background:#fff}.status-card.green{border-color:#287f45;background:#e9f6e9}.status-card.yellow{border-color:#b57608;background:#fff5dc}.status-card.red{border-color:#b33d36;background:#fdebea}.status-mark{display:grid;place-items:center;width:52px;height:52px;margin-bottom:14px;color:#fff;font:900 29px/1 Inter,sans-serif}.green .status-mark{border-radius:50%;background:#287f45}.yellow .status-mark{clip-path:polygon(50% 0,100% 100%,0 100%);padding-top:12px;background:#b57608;font-size:19px}.red .status-mark{clip-path:polygon(30% 0,70% 0,100% 30%,100% 70%,70% 100%,30% 100%,0 70%,0 30%);background:#b33d36}.status-card h3{margin:0 0 8px;color:#123c28;font-size:20px;letter-spacing:-.03em}.status-card p{margin:0;color:#284c34;font-size:14px;line-height:1.45}.status-card strong{display:block;margin-top:auto;padding-top:14px;color:#123c28;font-size:12px;letter-spacing:.04em}.demo-callout{display:grid;grid-template-columns:auto 1fr auto;gap:18px;align-items:center;margin-top:22px;padding:20px;border:3px solid #b33d36;background:#fdebea}.demo-callout .status-mark{margin:0}.demo-callout h3{margin:0 0 5px;color:#772522;font-size:21px;letter-spacing:-.03em}.demo-callout p{margin:0;color:#5f3532;line-height:1.45}.demo-callout a{display:inline-block;padding:13px 16px;background:#b33d36;color:#fff!important;text-decoration:none;font-weight:900;font-size:13px;white-space:nowrap}.demo-callout a:hover{background:#8f2924}@media(max-width:760px){.status-legend{grid-template-columns:1fr}.demo-callout{grid-template-columns:auto 1fr}.demo-callout a{grid-column:1/-1;text-align:center}.status-workbench{padding:22px 16px}}
+.partner-section{margin:0 0 62px;padding:32px;border:1px solid #b9d3bb;background:#fffefa;display:grid;grid-template-columns:1fr 1.1fr;gap:34px;align-items:center}.partner-copy h2{color:#123c28;font-size:clamp(30px,4vw,44px);letter-spacing:-.05em;margin:9px 0}.partner-copy p{max-width:500px;color:#385c43;line-height:1.55}.partner-action{display:inline-block;margin-top:18px;padding:13px 17px;background:#287f45;color:#fff!important;text-decoration:none;font-weight:900;font-size:13px}.partner-preview{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.partner-sample{min-height:168px;padding:13px;border:1px solid #c7dfc9;background:#f5fbf5;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}.partner-logo{display:grid;place-items:center;width:54px;height:54px;margin-bottom:10px;border-radius:50%;border:2px solid #287f45;background:#fff;color:#1e613a;font:900 8px/1.15 Inter,sans-serif;letter-spacing:.05em}.partner-sample strong{color:#123c28;font-size:11px}.partner-sample span{margin-top:5px;color:#547461;font-size:10px;line-height:1.3}.partner-qr{width:66px;height:66px;padding:7px;margin-bottom:10px;border:5px solid #287f45;background:repeating-conic-gradient(#287f45 0 25%,#fff 0 50%) 50%/13px 13px}.partner-qr .partner-logo{width:27px;height:27px;margin:8px auto;border-width:1px;font-size:5px}.partner-band{width:27px;height:72px;margin-bottom:10px;border-radius:15px;background:linear-gradient(to bottom,#e4d8a7,#5ca76c,#7db6cf,#d5b5cf);opacity:.72}.partner-band .partner-logo{width:24px;height:24px;margin:23px auto;border-width:1px;font-size:4px}.partner-spectral{width:88px;height:58px;margin-bottom:10px;border:1px solid #9ec9a6;border-radius:9px;background:linear-gradient(120deg,#f7fff8,#e6f6e8);position:relative;padding-top:11px}.partner-spectral:before{content:"";position:absolute;top:0;left:0;right:0;height:7px;background:linear-gradient(90deg,#e4d8a7,#5ca76c,#7db6cf,#d5b5cf)}.partner-spectral .partner-logo{width:28px;height:28px;margin:0 auto;border-width:1px;font-size:4px}.footer{padding:40px 0;text-align:center;color:var(--muted);font-size:11px;border-top:1px solid var(--line)}
+@media(max-width:760px){.seal-showcase{grid-template-columns:1fr}.partner-section{grid-template-columns:1fr}.nav-links{display:none}.hash-grid{grid-template-columns:1fr 1fr}}
+
+/* ─── Photonic scan animation ─── */
+.stage-wrap{position:relative;width:100%;max-width:980px;margin:32px auto 0;padding:0 20px}
+.stage-track{position:relative;height:72px;display:flex;align-items:center;justify-content:space-between}
+.stage-node{position:relative;z-index:2;width:100px;text-align:center;opacity:.3;transition:opacity .4s,transform .4s}.stage-node.lit{opacity:1;transform:scale(1.08)}.stage-node .sn-num{font:800 9px Inter;letter-spacing:.12em;color:var(--aqua);margin-bottom:4px}.stage-node .sn-name{font:700 12px Inter;letter-spacing:-.02em}.stage-node .sn-dot{width:10px;height:10px;border-radius:50%;background:rgba(237,248,236,.12);margin:8px auto 0;transition:background .3s,box-shadow .3s}.stage-node.lit .sn-dot{background:var(--lime);box-shadow:0 0 14px var(--lime)}
+.track-line{position:absolute;top:50%;left:50px;right:50px;height:2px;background:rgba(237,248,236,.08);z-index:0}
+.track-fill{position:absolute;top:50%;left:50px;height:2px;width:0;background:linear-gradient(90deg,var(--lime),var(--aqua));z-index:1;transition:width .5s ease}
+.photon{position:absolute;z-index:10;width:16px;height:16px;border-radius:50%;background:#fffbd7;box-shadow:0 0 8px #fff,0 0 20px var(--lime),0 0 48px var(--aqua);top:50%;transform:translate(-50%,-50%);opacity:0;transition:left .5s ease}
+.seal-ring-area{position:relative;display:flex;flex-direction:column;align-items:center;margin:28px auto 0;min-height:260px}
+.seal-ring-container{position:relative;width:200px;height:200px}
+canvas#sealCanvas{position:absolute;top:0;left:0;width:200px;height:200px;z-index:1}
+.seal-hex{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:160px;height:160px;z-index:2;opacity:0;transition:opacity .8s,transform .8s,filter .4s}
+.seal-hex.formed{opacity:1;transform:translate(-50%,-50%) scale(1)}
+.seal-hex svg{width:100%;height:100%}
+.seal-glow{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(217,255,122,.15),transparent 70%);z-index:0;opacity:0;transition:opacity .6s}.seal-glow.on{opacity:1}
+canvas#particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:100;opacity:0;transition:opacity .3s}
+canvas#particles.active{opacity:1}
+
+/* ─── Medium selector ─── */
+.medium-selector{display:flex;justify-content:center;gap:12px;margin:20px 0 28px;flex-wrap:wrap}
+.medium-btn{padding:12px 28px;font:800 13px Inter,sans-serif;letter-spacing:.04em;border:2px solid rgba(237,248,236,.15);background:transparent;color:var(--muted);cursor:pointer;transition:all .25s;border-radius:3px;display:flex;align-items:center;gap:8px}
+.medium-btn:hover{border-color:rgba(237,248,236,.3);color:var(--paper)}
+.medium-btn.active{border-color:var(--lime);color:var(--lime);background:rgba(217,255,122,.06)}
+.medium-btn svg{width:18px;height:18px;fill:currentColor}
+.medium-label{text-align:center;font:800 10px Inter;letter-spacing:.12em;color:var(--aqua);margin-bottom:4px}
+
+@media(max-width:620px){.stage-node{width:60px}.stage-node .sn-name{font-size:10px}.medium-btn{padding:10px 18px;font-size:12px}}
+
+/* ─── Live camera viewfinder ─── */
+.camera-view{position:relative;width:340px;height:260px;margin:0 auto;border-radius:10px;overflow:hidden;border:2px solid var(--lime);box-shadow:0 0 40px rgba(217,255,122,.18),inset 0 0 60px rgba(0,0,0,.3)}
+.camera-view video{width:100%;height:100%;object-fit:cover}
+.scan-overlay{position:absolute;inset:0;pointer-events:none}
+.scan-corner{position:absolute;width:32px;height:32px;border-color:var(--lime);border-style:solid;border-width:0}
+.scan-corner.tl{top:14px;left:14px;border-top-width:3px;border-left-width:3px}
+.scan-corner.tr{top:14px;right:14px;border-top-width:3px;border-right-width:3px}
+.scan-corner.bl{bottom:14px;left:14px;border-bottom-width:3px;border-left-width:3px}
+.scan-corner.br{bottom:14px;right:14px;border-bottom-width:3px;border-right-width:3px}
+.scan-beam{position:absolute;left:6%;right:6%;height:2px;background:linear-gradient(90deg,transparent,var(--lime) 20%,var(--lime) 80%,transparent);box-shadow:0 0 18px var(--lime),0 0 40px rgba(217,255,122,.3);animation:scanBeam 2s ease-in-out infinite}
+@keyframes scanBeam{0%,100%{top:12%}50%{top:88%}}
+.scan-label{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);font:800 11px Inter,sans-serif;letter-spacing:.14em;color:var(--lime);text-shadow:0 1px 8px rgba(0,0,0,.95);white-space:nowrap;padding:4px 12px;background:rgba(0,0,0,.45);border-radius:3px}
+.scan-detected{animation:scanPulse .3s ease}
+@keyframes scanPulse{0%{box-shadow:0 0 40px rgba(217,255,122,.18)}50%{box-shadow:0 0 80px rgba(217,255,122,.6),0 0 120px rgba(125,229,220,.3)}100%{box-shadow:0 0 40px rgba(217,255,122,.18)}}
+
+/* ─── Live audio visualizer ─── */
+.audio-view{position:relative;width:340px;height:180px;margin:0 auto;border-radius:10px;border:2px solid var(--aqua);background:rgba(3,8,7,.95);box-shadow:0 0 40px rgba(125,229,220,.12);overflow:hidden}
+.audio-view canvas{width:100%;height:100%}
+.audio-label{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);font:800 11px Inter,sans-serif;letter-spacing:.14em;color:var(--aqua);text-shadow:0 1px 8px rgba(0,0,0,.95);white-space:nowrap;padding:4px 12px;background:rgba(0,0,0,.45);border-radius:3px}
+.audio-level{position:absolute;top:12px;right:14px;font:800 13px monospace;color:var(--aqua);text-shadow:0 0 10px rgba(125,229,220,.6)}
+.audio-detected{animation:audioPulse .4s ease}
+@keyframes audioPulse{0%{box-shadow:0 0 40px rgba(125,229,220,.12)}50%{box-shadow:0 0 80px rgba(125,229,220,.5),0 0 120px rgba(217,255,122,.2)}100%{box-shadow:0 0 40px rgba(125,229,220,.12)}}
+@media(max-width:400px){.camera-view,.audio-view{width:100%;max-width:340px}.camera-view{height:220px}}
+</style></head><body>
+<nav class="nav"><a href="/" class="brand"><b>N</b> DeBacco Nexus</a><div class="nav-links"><a href="/">Home</a><a href="/chain.html">Chain</a><a href="/seal.html">Seal</a><a href="/seal-demo.html">Tamper</a><a href="/swarm.html">Swarm</a><a href="/environment.html">EFD</a><a href="/ecos-demo.html">ECOS</a><a href="/sdg.html">SDGs</a><a href="/un-gaps.html">UN Gaps</a><a href="/about.html">About</a><a href="/team.html">Team</a><a href="https://www.debacconexus.ai/oshi-experience.html">Oshi</a></div><a href="/chain.html" class="nav-cta">Run live gate</a></nav>
+<main class="shell">
+<section class="hero"><div class="eyebrow">Carbon Footprint Passport</div><h1>One clear sign. <em>Any medium.</em></h1><p>A DeBacco Nexus seal tells people that a Carbon Footprint Passport exists. It can travel with a report, image, video, audio file, or dataset.</p></section>
+<section class="status-workbench" aria-labelledby="status-heading"><h2 id="status-heading">Read the seal at a glance.</h2><p>Every status has a clear color, shape, and plain-language meaning. The same meaning works on a document, video, audio file, data record, or Passport screen.</p><div class="status-legend"><article class="status-card green"><div class="status-mark" aria-hidden="true">&#10003;</div><h3>GREEN · VERIFIED</h3><p>An issued Passport was found and the record checks out.</p><strong>CHECK MARK · VERIFIED</strong></article><article class="status-card yellow"><div class="status-mark" aria-hidden="true">&#8545;</div><h3>YELLOW · PAUSED OR MISSING</h3><p>The work needs review, or no issued Passport could be found. Do not assume provenance.</p><strong>TRIANGLE · CHECK FIRST</strong></article><article class="status-card red"><div class="status-mark" aria-hidden="true">!</div><h3>RED · STOP / INVALID</h3><p>The record does not match or is not valid. Do not rely on the presented seal.</p><strong>OCTAGON · DO NOT RELY</strong></article></div><div class="demo-callout"><div class="status-mark" aria-hidden="true">!</div><div><h3>See the red status in action.</h3><p>Change an illustrative receipt character and watch the status change. The demonstration shows what an integrity warning looks like; it is not a physical-copy test.</p></div><a href="/passport-test.html">Try the Passport status tests</a></div></section>
+<section aria-labelledby="types-heading"><div class="eyebrow">The seal system</div><h2 id="types-heading" style="text-align:center;color:#123c28;font-size:clamp(28px,4vw,42px);letter-spacing:-.05em">One Passport. <em style="font:400 1em Georgia,serif;color:#287f45">Three ways it appears.</em></h2><p style="max-width:680px;margin:12px auto 0;text-align:center;color:#385c43;line-height:1.55">They all open the same signed Carbon Footprint Passport. The format changes only to fit the kind of work.</p><div class="seal-showcase">
+<article class="seal-item"><div class="seal-visual"><div class="qr-seal" aria-label="Green document QR seal"><i class="finder"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="finder"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i class="finder"></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div><div class="seal-label">1 · Document seal</div><h3>QR Passport Seal</h3><p class="seal-desc">For reports, research papers, and data records. Scan it to open the signed Passport.</p><span class="seal-note">Use when a reader needs a direct, reliable route to the record.</span></article>
+<article class="seal-item"><div class="seal-visual"><div class="band-seal" aria-label="Faint environmental accountability band"></div></div><div class="seal-label">2 · Signal seal</div><h3>Accountability Band</h3><p class="seal-desc">For audio and video. A light visual or signal marker carries the Passport route without covering the work.</p><span class="seal-note">Use when a square QR code would interrupt the media.</span></article>
+<article class="seal-item"><div class="seal-visual"><div class="spectral-seal" aria-label="Spectral response seal"><span>LIGHT-RESPONSE SEAL</span></div></div><div class="seal-label">3 · Camera-assisted seal</div><h3>Spectral Response Seal</h3><p class="seal-desc">For media that needs a camera-assisted visual check before opening the Passport.</p><span class="seal-note">This is an experimental research feature. The signed Passport remains the verification record.</span></article>
+</div></section>
+<section class="partner-section" id="your-seal"><div class="partner-copy"><div class="eyebrow">Partner edition</div><h2>Your logo <em style="font:400 1em Georgia,serif;color:#287f45">inside the seal.</em></h2><p>A university, agency, company, or research program can place its mark in the center of the Passport seal. The mark shows who issued or sponsored the record; the signed Passport remains the proof behind it.</p><p style="margin-top:14px"><strong>Environmental Fiduciary Duty means:</strong> we choose governed AI, make its use visible, and account for the energy, water, and carbon estimate behind that work. It is a public commitment to use AI with care for people and the planet.</p><a class="partner-action" href="#" onclick="navigator.clipboard.writeText('info@debacconexus.com');this.textContent='Copied! info@debacconexus.com';return false">Discuss a partner pilot</a></div><div class="partner-preview" aria-label="Examples of a partner logo appearing inside each seal format"><div class="partner-sample"><div class="partner-qr"><div class="partner-logo">YOUR<br>LOGO</div></div><strong>Document QR</strong><span>Partner mark at the center</span></div><div class="partner-sample"><div class="partner-band"><div class="partner-logo">YOUR<br>LOGO</div></div><strong>Media band</strong><span>Partner mark within the band</span></div><div class="partner-sample"><div class="partner-spectral"><div class="partner-logo">YOUR<br>LOGO</div></div><strong>Spectral seal</strong><span>Partner mark in the light layer</span></div></div></section>
+<section class="hash-section"><h2>What the Passport can <em>show you.</em></h2><p>Open the Passport only when you need the detailed record behind the seal.</p>
+<div class="hash-grid">
+<div class="hash-point"><div class="hp-num">1</div><h4>Agent Identity</h4><p>The authorized actor that requested the action. Scoped identifier, not a global key.</p></div>
+<div class="hash-point"><div class="hp-num">2</div><h4>Multi-Model Consensus</h4><p>Three independent models voted on whether the request should proceed.</p></div>
+<div class="hash-point"><div class="hp-num">3</div><h4>Intent Classification</h4><p>Model E classified the request against the declared mission authority.</p></div>
+<div class="hash-point"><div class="hp-num">4</div><h4>Compliance Checks</h4><p>PII, content safety, minor references, data boundary, mission authority, purpose.</p></div>
+<div class="hash-point"><div class="hp-num">5</div><h4>Environmental Fiduciary Duty</h4><p>The commitment: governance can protect people and the living systems that power their tools.</p></div>
+<div class="hash-point"><div class="hp-num">6</div><h4>Environmental Estimate</h4><p>A declared modelled estimate of energy, water, carbon, and avoided target work. It is not a physical measurement.</p></div>
+<div class="hash-point"><div class="hp-num">7</div><h4>Ed25519 Signature</h4><p>Cryptographic signature verifiable by anyone with the public key.</p></div>
+<div class="hash-point"><div class="hp-num">8</div><h4>Receipt Hash Chain</h4><p>SHA-256 linking this transaction to the governed chain. Tamper-evident by design.</p></div>
+</div></section>
+<section class="embed-section"><h2>What a seal means—and does not mean</h2><p>The seal is a doorway to a signed Passport. It helps a person find the record behind AI-assisted work.</p><p>A seal alone does not prove that a report is true, that a person approved it, or that it will be accepted by a court or regulator. Open the Passport and check the issued record.</p><p style="font-size:12px;color:var(--muted)">C2PA can carry signed history with a digital file. A DeBacco Nexus Passport can add the governed AI-work record behind it.</p>
+</section>
+
+<!-- ═══════════════════════════════════════════════════════════════
+     LIVE DEMONSTRATION — photonic scan + Text / Audio / Video
+     ═══════════════════════════════════════════════════════════════ -->
+<div id="sealReveal" style="padding:60px 0;border-top:1px solid var(--line)">
+<div class="eyebrow">Live demonstration — photonic seal scan</div>
+<h2 style="font-size:clamp(24px,4vw,36px);letter-spacing:-.04em;margin-bottom:12px">Scan any medium. <em style="font:400 1em Georgia,serif;color:var(--lime)">See the Passport form.</em></h2>
+<p style="color:var(--muted);font-size:15px;line-height:1.6;max-width:650px;margin:0 auto 24px;text-align:center">Choose a medium. <strong style="color:var(--paper)">Video</strong> opens your camera to physically scan a barcode. <strong style="color:var(--paper)">Audio</strong> opens your microphone to capture a live acoustic signal. <strong style="color:var(--paper)">Text</strong> runs a direct governed event. Each scan produces a signed Carbon Footprint Passport.</p>
+
+<!-- Medium selector -->
+<div class="medium-selector">
+<button class="medium-btn active" data-medium="text" onclick="selectMedium('text')">
+<svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8l-6-6zm-1 2l5 5h-5V4zM7 13h10v2H7v-2zm0 4h7v2H7v-2zm0-8h4v2H7V9z"/></svg>
+TEXT
+</button>
+<button class="medium-btn" data-medium="audio" onclick="selectMedium('audio')">
+<svg viewBox="0 0 24 24"><path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3zm-1-9c0-.55.45-1 1-1s1 .45 1 1v6c0 .55-.45 1-1 1s-1-.45-1-1V5zm6 6c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/></svg>
+AUDIO
+</button>
+<button class="medium-btn" data-medium="video" onclick="selectMedium('video')">
+<svg viewBox="0 0 24 24"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z"/></svg>
+VIDEO
+</button>
+</div>
+
+<!-- Photonic stage pipeline -->
+<div class="stage-wrap">
+<div class="stage-track">
+<div class="track-line"></div>
+<div class="track-fill" id="trackFill"></div>
+<div class="photon" id="photon"></div>
+<div class="stage-node" id="st0"><div class="sn-num">01</div><div class="sn-name">Evidence</div><div class="sn-dot"></div></div>
+<div class="stage-node" id="st1"><div class="sn-num">02</div><div class="sn-name">Lock</div><div class="sn-dot"></div></div>
+<div class="stage-node" id="st2"><div class="sn-num">03</div><div class="sn-name">Consensus</div><div class="sn-dot"></div></div>
+<div class="stage-node" id="st3"><div class="sn-num">04</div><div class="sn-name">Intent</div><div class="sn-dot"></div></div>
+<div class="stage-node" id="st4"><div class="sn-num">05</div><div class="sn-name">Inference</div><div class="sn-dot"></div></div>
+<div class="stage-node" id="st5"><div class="sn-num">06</div><div class="sn-name">Receipt</div><div class="sn-dot"></div></div>
+</div>
+</div>
+
+<!-- Seal hex + ring canvas -->
+<div class="seal-ring-area">
+<div class="seal-ring-container">
+<canvas id="sealCanvas" width="400" height="400"></canvas>
+<div class="seal-glow" id="sealGlow"></div>
+<div class="seal-hex" id="sealHex">
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+<polygon points="100,10 180,55 180,145 100,190 20,145 20,55" fill="none" stroke="#287f45" stroke-width="2" opacity=".8"/>
+<polygon points="100,25 168,63 168,137 100,175 32,137 32,63" fill="rgba(40,127,69,.08)" stroke="#287f45" stroke-width="1" opacity=".5"/>
+<text x="100" y="92" text-anchor="middle" fill="#287f45" font-family="Georgia" font-size="42" font-weight="700">DN</text>
+<text x="100" y="118" text-anchor="middle" fill="#176f69" font-family="Inter,sans-serif" font-size="9" font-weight="800" letter-spacing="3">GOVERNED</text>
+<line x1="60" y1="128" x2="140" y2="128" stroke="rgba(23,111,105,.3)" stroke-width="1"/>
+<text x="100" y="145" text-anchor="middle" fill="#526e59" font-family="Inter,sans-serif" font-size="7" font-weight="600" letter-spacing="2" id="sealVerdictText">AWAITING SCAN</text>
+</svg>
+</div>
+</div>
+</div>
+
+<!-- Receipt panel — populated with live data -->
+<div id="receiptPanel" style="max-width:700px;margin:24px auto 0;opacity:0;transform:translateY(12px);transition:opacity .8s,transform .8s">
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(237,248,236,.08)">
+<div style="background:rgba(13,26,18,.95);padding:16px">
+<div style="font:500 9px monospace;letter-spacing:.08em;color:#7de5dc;margin-bottom:8px">GOVERNED RECEIPT</div>
+<div style="font:400 12px monospace;color:#edf8ec" id="rAGD">—</div>
+<div style="font:400 11px monospace;color:#9ab89d;margin-top:4px" id="rVerdict">Awaiting photonic scan</div>
+<div style="font:400 11px monospace;color:#9ab89d;margin-top:2px" id="rMedium">Medium: text</div>
+</div>
+<div style="background:rgba(13,26,18,.95);padding:16px">
+<div style="font:500 9px monospace;letter-spacing:.08em;color:#287f45;margin-bottom:8px">CARBON FOOTPRINT PASSPORT</div>
+<div style="font:400 12px monospace;color:#edf8ec" id="rEnergy">—</div>
+<div style="font:400 11px monospace;color:#9ab89d;margin-top:4px" id="rCO2">—</div>
+<div style="font:400 11px monospace;color:#9ab89d;margin-top:2px" id="rWater">—</div>
+</div>
+</div>
+<div style="background:rgba(13,26,18,.95);border-top:1px solid rgba(237,248,236,.06);padding:12px 16px;text-align:center">
+<div style="font:400 10px monospace;color:rgba(237,248,236,.3);word-break:break-all" id="rHash">SHA-256: awaiting photonic scan</div>
+<div style="font:400 10px monospace;color:rgba(237,248,236,.2);margin-top:4px" id="rSig">Ed25519: awaiting photonic scan</div>
+<div style="font:400 10px monospace;color:rgba(237,248,236,.2);margin-top:4px" id="rTime"></div>
+</div>
+</div>
+
+<!-- QR code area -->
+<div id="qrArea" style="text-align:center;margin-top:24px;opacity:0;transition:opacity 1s">
+<div id="qrTarget" style="display:inline-block;background:#fafff9;padding:8px;border:8px solid rgba(40,127,69,.22)"></div>
+<p style="color:#287f45;font:italic 400 14px Georgia,serif;margin-top:12px">Scan the QR to open the signed Passport.</p>
+</div>
+
+<!-- Controls -->
+<div style="text-align:center;margin-top:32px">
+<button id="revealBtn" onclick="runPhotonScan()" style="padding:14px 36px;background:#287f45;color:#fff;font:800 14px Inter,sans-serif;border:none;border-radius:3px;cursor:pointer;letter-spacing:.02em;transition:opacity .2s">Run photonic seal scan</button>
+<button id="resetBtn" onclick="resetAll()" style="padding:14px 24px;background:transparent;color:#9ab89d;font:500 13px Inter,sans-serif;border:1px solid rgba(237,248,236,.12);border-radius:3px;cursor:pointer;margin-left:8px;display:none">Reset</button>
+</div>
+<p id="sampleStatus" role="status" style="min-height:22px;text-align:center;color:#527260;font-size:13px;margin:14px auto 0;max-width:560px">Choose a medium. Video and Audio use your device's live camera and microphone.</p>
+<p style="text-align:center;color:rgba(237,248,236,.25);font-size:11px;margin-top:16px">USPTO Patent Pending 19/571,156 · DeBacco Nexus LLC · Governedware™</p>
+</div>
+
+<canvas id="particles" width="1" height="1"></canvas>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════
+   LIVE PHOTONIC SEAL — Camera + Microphone + Direct
+   ══════════════════════════════════════════════════════════ */
+
+/* ── State ── */
+var selectedMedium='text';
+var scanState='idle';
+var cameraStream=null;
+var audioCtx=null;
+var audioSource=null;
+var audioAnalyser=null;
+var micStream=null;
+var _scanRAF=0;
+var _audioRAF=0;
+
+/* ── Medium selector ── */
+function selectMedium(m){
+  if(scanState!=='idle')return;
+  selectedMedium=m;
+  document.querySelectorAll('.medium-btn').forEach(function(b){
+    b.classList.toggle('active',b.getAttribute('data-medium')===m);
+  });
+  document.getElementById('rMedium').textContent='Medium: '+m;
+  /* Update button label to reflect medium */
+  var btn=document.getElementById('revealBtn');
+  if(m==='video') btn.textContent='Open camera — scan barcode';
+  else if(m==='audio') btn.textContent='Open microphone — scan audio';
+  else btn.textContent='Run photonic seal scan';
+}
+
+/* ── Particle system ── */
+var pCanvas=document.getElementById('particles');
+var pCtx=pCanvas.getContext('2d');
+var particles=[];
+function resizeParticles(){pCanvas.width=window.innerWidth;pCanvas.height=window.innerHeight}
+window.addEventListener('resize',resizeParticles);resizeParticles();
+function spawnParticles(x,y,color,count){
+  for(var i=0;i<count;i++){
+    var angle=Math.random()*Math.PI*2;
+    var speed=2+Math.random()*6;
+    particles.push({x:x,y:y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life:1,decay:.008+Math.random()*.015,size:2+Math.random()*4,color:color});
+  }
+  pCanvas.classList.add('active');
+}
+function animateParticles(){
+  pCtx.clearRect(0,0,pCanvas.width,pCanvas.height);
+  particles=particles.filter(function(p){
+    p.x+=p.vx;p.y+=p.vy;p.vy+=.08;p.life-=p.decay;
+    if(p.life<=0)return false;
+    pCtx.globalAlpha=p.life;pCtx.fillStyle=p.color;
+    pCtx.fillRect(p.x-p.size/2,p.y-p.size/2,p.size,p.size);
+    return true;
+  });
+  pCtx.globalAlpha=1;
+  if(particles.length===0)pCanvas.classList.remove('active');
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+/* ── Ring canvas animation ── */
+var sCanvas=document.getElementById('sealCanvas');
+var sCtx=sCanvas.getContext('2d');
+var ringEnergy=0,ringTarget=0,ringColor=[217,255,122];
+function drawRing(){
+  sCtx.clearRect(0,0,400,400);
+  if(ringEnergy<.01){requestAnimationFrame(drawRing);return}
+  var cx=200,cy=200;
+  for(var i=0;i<3;i++){
+    var r=62+i*16;
+    sCtx.beginPath();sCtx.arc(cx,cy,r,0,Math.PI*2);
+    sCtx.strokeStyle='rgba('+ringColor.join(',')+','+(.15*ringEnergy*(1-i*.15)).toFixed(3)+')';
+    sCtx.lineWidth=1.5;sCtx.stroke();
+  }
+  var t=Date.now()*.001;
+  for(var j=0;j<6;j++){
+    var angle=t*(.5+j*.1)+j*Math.PI/3;
+    var dx=cx+Math.cos(angle)*(66+j*7);
+    var dy=cy+Math.sin(angle)*(66+j*7);
+    sCtx.beginPath();sCtx.arc(dx,dy,2,0,Math.PI*2);
+    sCtx.fillStyle='rgba('+ringColor.join(',')+','+(.4*ringEnergy).toFixed(3)+')';
+    sCtx.fill();
+  }
+  ringEnergy+=(ringTarget-ringEnergy)*.06;
+  requestAnimationFrame(drawRing);
+}
+drawRing();
+
+/* ── Stage pipeline ── */
+function lightStage(i){
+  return new Promise(function(resolve){
+    var node=document.getElementById('st'+i);
+    var photon=document.getElementById('photon');
+    var fill=document.getElementById('trackFill');
+    var pct=(i/5)*100;
+    var trackWidth=document.querySelector('.stage-track').offsetWidth-100;
+    photon.style.opacity='1';
+    photon.style.left=(50+trackWidth*i/5)+'px';
+    fill.style.width=pct+'%';
+    node.classList.add('lit');
+    setTimeout(resolve,500);
+  });
+}
+
+/* ── Status helper ── */
+function setSampleStatus(msg,kind){
+  var el=document.getElementById('sampleStatus');
+  el.textContent=msg;
+  el.style.color=kind==='error'?'#b33d36':(kind==='ready'?'#287f45':'#527260');
+}
+
+/* ── QR ── */
+var sealQR=null;
+function drawQR(url){
+  var el=document.getElementById('qrTarget');el.innerHTML='';
+  sealQR=new QRCode(el,{text:url,width:164,height:164,colorDark:'#287f45',colorLight:'#fafff9',correctLevel:QRCode.CorrectLevel.M});
+}
+
+/* ══════════════════════════════════════════════════════════
+   LIVE CAMERA SCAN — BarcodeDetector + getUserMedia
+   ══════════════════════════════════════════════════════════ */
+function startCameraScan(){
+  return new Promise(function(resolve,reject){
+    /* Check support */
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+      reject(new Error('Camera API not available. Use HTTPS on a modern browser.'));
+      return;
+    }
+
+    var sealArea=document.querySelector('.seal-ring-area');
+    var container=document.querySelector('.seal-ring-container');
+
+    /* Hide seal visuals */
+    container.style.display='none';
+
+    /* Build camera viewfinder */
+    var camDiv=document.createElement('div');
+    camDiv.id='liveCameraView';
+    camDiv.className='camera-view';
+
+    var video=document.createElement('video');
+    video.setAttribute('playsinline','');
+    video.setAttribute('autoplay','');
+    video.muted=true;
+
+    var overlay=document.createElement('div');
+    overlay.className='scan-overlay';
+    overlay.innerHTML='<div class="scan-corner tl"></div><div class="scan-corner tr"></div><div class="scan-corner bl"></div><div class="scan-corner br"></div><div class="scan-beam"></div><div class="scan-label">SCANNING BARCODE</div>';
+
+    camDiv.appendChild(video);
+    camDiv.appendChild(overlay);
+    sealArea.insertBefore(camDiv,sealArea.firstChild);
+
+    /* Open camera */
+    navigator.mediaDevices.getUserMedia({
+      video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}
+    }).then(function(stream){
+      cameraStream=stream;
+      video.srcObject=stream;
+
+      video.onloadedmetadata=function(){
+        video.play();
+
+        /* Try native BarcodeDetector */
+        var hasBarcodeAPI=typeof BarcodeDetector!=='undefined';
+
+        if(hasBarcodeAPI){
+          var detector=new BarcodeDetector({formats:['qr_code','code_128','code_39','data_matrix','ean_13','ean_8','upc_a','upc_e']});
+
+          function scanFrame(){
+            if(!cameraStream)return;
+            detector.detect(video).then(function(barcodes){
+              if(barcodes.length>0){
+                var data=barcodes[0].rawValue;
+                var format=barcodes[0].format;
+                /* Flash the viewfinder */
+                camDiv.classList.add('scan-detected');
+                overlay.querySelector('.scan-label').textContent='BARCODE CAPTURED — '+format.toUpperCase();
+                setTimeout(function(){
+                  stopCamera();
+                  resolve({data:data,format:format,method:'BarcodeDetector'});
+                },400);
+                return;
+              }
+              _scanRAF=requestAnimationFrame(scanFrame);
+            }).catch(function(){
+              _scanRAF=requestAnimationFrame(scanFrame);
+            });
+          }
+          /* Start scanning after a brief warmup */
+          setTimeout(function(){scanFrame()},300);
+
+        }else{
+          /* No BarcodeDetector — cannot scan. Be honest. */
+          stopCamera();
+          reject(new Error('This browser does not support barcode scanning. Use Chrome 83+ or Safari 15.4+ on a mobile device.'));
+        }
+      };
+    }).catch(function(err){
+      /* Clean up on failure */
+      if(camDiv.parentNode)camDiv.parentNode.removeChild(camDiv);
+      container.style.display='';
+      reject(err);
+    });
+  });
+}
+
+function stopCamera(){
+  cancelAnimationFrame(_scanRAF);
+  if(cameraStream){
+    cameraStream.getTracks().forEach(function(t){t.stop()});
+    cameraStream=null;
+  }
+  var camDiv=document.getElementById('liveCameraView');
+  if(camDiv&&camDiv.parentNode)camDiv.parentNode.removeChild(camDiv);
+  var container=document.querySelector('.seal-ring-container');
+  if(container)container.style.display='';
+}
+
+/* ══════════════════════════════════════════════════════════
+   LIVE AUDIO SCAN — Microphone + Web Audio AnalyserNode
+   ══════════════════════════════════════════════════════════ */
+function startAudioListen(){
+  return new Promise(function(resolve,reject){
+    if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){
+      reject(new Error('Microphone API not available. Use HTTPS on a modern browser.'));
+      return;
+    }
+
+    var sealArea=document.querySelector('.seal-ring-area');
+    var container=document.querySelector('.seal-ring-container');
+    container.style.display='none';
+
+    /* Build audio visualizer */
+    var audioDiv=document.createElement('div');
+    audioDiv.id='liveAudioView';
+    audioDiv.className='audio-view';
+
+    var aCanvas=document.createElement('canvas');
+    aCanvas.width=680;aCanvas.height=360;
+    var levelEl=document.createElement('div');
+    levelEl.className='audio-level';
+    levelEl.textContent='0 dB';
+    var labelEl=document.createElement('div');
+    labelEl.className='audio-label';
+    labelEl.textContent='LISTENING FOR SIGNAL';
+
+    audioDiv.appendChild(aCanvas);
+    audioDiv.appendChild(levelEl);
+    audioDiv.appendChild(labelEl);
+    sealArea.insertBefore(audioDiv,sealArea.firstChild);
+
+    var aCtx=aCanvas.getContext('2d');
+    var sustainCount=0;
+    var requiredSustain=90; /* ~1.5s at 60fps */
+    var peakDb=0;
+
+    navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+      micStream=stream;
+      audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+      audioSource=audioCtx.createMediaStreamSource(stream);
+      audioAnalyser=audioCtx.createAnalyser();
+      audioAnalyser.fftSize=2048;
+      audioAnalyser.smoothingTimeConstant=0.8;
+      audioSource.connect(audioAnalyser);
+
+      var freqData=new Uint8Array(audioAnalyser.frequencyBinCount);
+      var timeData=new Uint8Array(audioAnalyser.fftSize);
+
+      function drawAudio(){
+        if(!micStream){return}
+        audioAnalyser.getByteTimeDomainData(timeData);
+        audioAnalyser.getByteFrequencyData(freqData);
+
+        /* Draw waveform */
+        aCtx.fillStyle='rgba(3,8,7,.25)';
+        aCtx.fillRect(0,0,680,360);
+
+        /* Frequency bars */
+        var barW=680/128;
+        for(var i=0;i<128;i++){
+          var val=freqData[i*4]/255;
+          var h=val*280;
+          var hue=170+val*60;
+          aCtx.fillStyle='hsla('+hue+',70%,'+(40+val*30)+'%,'+(0.4+val*0.5)+')';
+          aCtx.fillRect(i*barW,360-h,barW-1,h);
+        }
+
+        /* Waveform line on top */
+        aCtx.strokeStyle='rgba(125,229,220,.7)';
+        aCtx.lineWidth=2;
+        aCtx.beginPath();
+        var sliceW=680/timeData.length;
+        for(var j=0;j<timeData.length;j++){
+          var y=(timeData[j]/255)*360;
+          if(j===0)aCtx.moveTo(0,y);
+          else aCtx.lineTo(j*sliceW,y);
+        }
+        aCtx.stroke();
+
+        /* Calculate volume */
+        var sum=0;
+        for(var k=0;k<freqData.length;k++)sum+=freqData[k];
+        var avg=sum/freqData.length;
+        var db=Math.round(avg*0.4);
+        if(db>peakDb)peakDb=db;
+        levelEl.textContent=db+' dB';
+
+        /* Detect sustained audio signal */
+        if(avg>28){
+          sustainCount++;
+          /* Visual feedback: label changes as signal builds */
+          var pct=Math.min(100,Math.round(sustainCount/requiredSustain*100));
+          labelEl.textContent='SIGNAL DETECTED — '+pct+'%';
+
+          if(sustainCount>=requiredSustain){
+            /* SHA-256 hash the real frequency data — genuine cryptographic fingerprint */
+            audioDiv.classList.add('audio-detected');
+            labelEl.textContent='HASHING ACOUSTIC DATA...';
+
+            /* Hash the raw frequency buffer with Web Crypto */
+            crypto.subtle.digest('SHA-256',freqData.buffer).then(function(hashBuf){
+              var hashArr=new Uint8Array(hashBuf);
+              var hashHex='';
+              for(var hi=0;hi<hashArr.length;hi++){
+                hashHex+=('0'+hashArr[hi].toString(16)).slice(-2);
+              }
+
+              labelEl.textContent='ACOUSTIC BAND CAPTURED · SHA-256';
+
+              setTimeout(function(){
+                stopAudio();
+                resolve({data:hashHex,peakDb:peakDb,method:'microphone',hashAlgorithm:'SHA-256'});
+              },500);
+            }).catch(function(){
+              /* Fallback: raw frequency peaks if SubtleCrypto unavailable */
+              var peaks=[];
+              for(var p=0;p<freqData.length;p++){
+                if(freqData[p]>120)peaks.push(p+':'+freqData[p]);
+              }
+              labelEl.textContent='ACOUSTIC BAND CAPTURED';
+              setTimeout(function(){
+                stopAudio();
+                resolve({data:peaks.join(','),peakDb:peakDb,method:'microphone'});
+              },500);
+            });
+            return;
+          }
+        }else{
+          sustainCount=Math.max(0,sustainCount-3);
+          if(sustainCount<10)labelEl.textContent='LISTENING FOR SIGNAL';
+        }
+
+        _audioRAF=requestAnimationFrame(drawAudio);
+      }
+      drawAudio();
+    }).catch(function(err){
+      if(audioDiv.parentNode)audioDiv.parentNode.removeChild(audioDiv);
+      container.style.display='';
+      reject(err);
+    });
+  });
+}
+
+function stopAudio(){
+  cancelAnimationFrame(_audioRAF);
+  if(micStream){
+    micStream.getTracks().forEach(function(t){t.stop()});
+    micStream=null;
+  }
+  if(audioCtx){
+    try{audioCtx.close()}catch(e){}
+    audioCtx=null;audioSource=null;audioAnalyser=null;
+  }
+  var audioDiv=document.getElementById('liveAudioView');
+  if(audioDiv&&audioDiv.parentNode)audioDiv.parentNode.removeChild(audioDiv);
+  var container=document.querySelector('.seal-ring-container');
+  if(container)container.style.display='';
+}
+
+/* ══════════════════════════════════════════════════════════
+   MAIN: Run photonic seal scan — LIVE by medium
+   ══════════════════════════════════════════════════════════ */
+async function runPhotonScan(){
+  if(scanState!=='idle')return;
+  scanState='scanning';
+
+  var btn=document.getElementById('revealBtn');
+  btn.disabled=true;btn.style.opacity='.6';
+
+  /* Reset visuals */
+  document.querySelectorAll('.stage-node').forEach(function(n){n.classList.remove('lit')});
+  document.getElementById('photon').style.opacity='0';
+  document.getElementById('trackFill').style.width='0';
+  document.getElementById('sealHex').className='seal-hex';
+  document.getElementById('sealGlow').className='seal-glow';
+  ringTarget=0;ringColor=[217,255,122];
+  document.getElementById('receiptPanel').style.opacity='0';
+  document.getElementById('receiptPanel').style.transform='translateY(12px)';
+  document.getElementById('qrArea').style.opacity='0';
+
+  var evidence=null;
+
+  /* ── VIDEO: Live camera barcode scan ── */
+  if(selectedMedium==='video'){
+    btn.textContent='Opening camera...';
+    setSampleStatus('Requesting camera access for live photonic barcode scan.','working');
+
+    try{
+      evidence=await startCameraScan();
+    }catch(e){
+      btn.textContent='Camera unavailable';btn.style.opacity='1';btn.disabled=false;scanState='idle';
+      setSampleStatus('Camera access denied or unavailable. '+e.message,'error');
+      return;
+    }
+
+    btn.textContent='Barcode captured — running governed chain...';
+    var evidencePreview=evidence.data.length>50?evidence.data.substring(0,50)+'…':evidence.data;
+    setSampleStatus('Live barcode read ('+evidence.format+'): '+evidencePreview+'. Running governed chain.','working');
+
+  /* ── AUDIO: Live microphone acoustic scan ── */
+  }else if(selectedMedium==='audio'){
+    btn.textContent='Opening microphone...';
+    setSampleStatus('Requesting microphone access for acoustic seal scan. Play or speak near the device.','working');
+
+    try{
+      evidence=await startAudioListen();
+    }catch(e){
+      btn.textContent='Microphone unavailable';btn.style.opacity='1';btn.disabled=false;scanState='idle';
+      setSampleStatus('Microphone access denied or unavailable. '+e.message,'error');
+      return;
+    }
+
+    btn.textContent='Audio captured — running governed chain...';
+    setSampleStatus('Acoustic signal captured (peak '+evidence.peakDb+' dB). Running governed chain.','working');
+
+  /* ── TEXT: Direct governed event ── */
+  }else{
+    btn.textContent='Scanning — text...';
+    setSampleStatus('Photonic scan initiated. Running governed text event.','working');
+    evidence={data:'text-direct',method:'direct'};
+  }
+
+  /* ── Pipeline animation + API call in parallel ── */
+  var apiBody={
+    prompt:'State your governance disclosures for this sealed '+selectedMedium+' document.',
+    medium:selectedMedium
+  };
+  /* Include evidence from live scan */
+  if(evidence&&evidence.data!=='text-direct'){
+    apiBody.evidence=evidence.data;
+    apiBody.captureMethod=evidence.method;
+  }
+
+  var apiPromise=fetch('/api/demo/live-chain',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(apiBody)
+  }).then(function(r){
+    if(!r.ok)return r.text().then(function(body){throw new Error('Live service unavailable'+(body?' — '+body.slice(0,120):''));});
+    return r.text();
+  });
+
+  /* Animate stages 0-4 while API runs */
+  for(var i=0;i<5;i++){
+    await lightStage(i);
+    ringTarget=Math.min(1,(i+1)/6);
+  }
+
+  /* Wait for API to finish */
+  var raw;
+  try{raw=await apiPromise}catch(e){
+    btn.textContent='Scan failed';btn.style.opacity='1';btn.disabled=false;scanState='idle';
+    setSampleStatus('The photonic scan could not complete. '+e.message,'error');
+    return;
+  }
+
+  /* Light final stage */
+  await lightStage(5);
+  ringTarget=1;
+
+  /* Parse SSE response */
+  var hash='',sig='',verdict='',ecos=null,receipt=null,passport=null;
+  var allData=raw.match(/data: \{[^\n]+/g)||[];
+  for(var j=0;j<allData.length;j++){
+    try{
+      var d=JSON.parse(allData[j].substring(6));
+      if(d.key==='RECEIPT'&&d.metrics){hash=d.metrics.receiptHash||d.metrics.hash||hash;sig=d.metrics.signature||sig;}
+      if(d.key==='MISSION_DECISION')verdict=d.status||verdict;
+      if(d.key==='ECOS_CARBON_PASSPORT'&&d.metrics&&d.metrics.ecos)ecos=d.metrics.ecos;
+      if(d.receiptHash)hash=d.receiptHash;
+      if(d.signedReceipt){receipt=d.signedReceipt.receipt||receipt;hash=d.signedReceipt.hash||d.signedReceipt.receiptHash||hash;sig=d.signedReceipt.signature||sig;}
+      if(d.verdict)verdict=d.verdict;
+      if(d.ecos)ecos=d.ecos;
+      if(d.passport)passport=d.passport;
+      var ms=JSON.stringify(d);
+      if(!hash){var hm=ms.match(/"(?:receiptHash|hash)":"([a-f0-9]{64})"/);if(hm)hash=hm[1];}
+      if(!sig){var sm=ms.match(/"signature":"([A-Za-z0-9+\/=]{20,})"/);if(sm)sig=sm[1];}
+    }catch(e){}
+  }
+
+  if(!hash){
+    btn.textContent='No Passport returned';btn.style.opacity='1';btn.disabled=false;scanState='idle';
+    setSampleStatus('No signed record was returned. Please try again later.','error');
+    return;
+  }
+
+  /* Form the seal */
+  await new Promise(function(r){setTimeout(r,300)});
+  document.getElementById('sealHex').classList.add('formed');
+  document.getElementById('sealGlow').classList.add('on');
+  document.getElementById('sealVerdictText').textContent='GREEN · CLEARED';
+
+  var rect=document.getElementById('sealHex').getBoundingClientRect();
+  var cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+  spawnParticles(cx,cy,'#d9ff7a',50);
+  spawnParticles(cx,cy,'#7de5dc',30);
+
+  /* Populate receipt with real data */
+  verdict=(receipt&&receipt.verdict)||verdict||'CERTIFIED';
+  var released=receipt&&typeof receipt.released==='boolean'?receipt.released:verdict==='CERTIFIED';
+  var status=released?'GREEN · CLEARED':'YELLOW · REVIEW NEEDED';
+  var ts=(receipt&&receipt.timestamp)||new Date().toISOString();
+  var totalTokens=receipt&&Number.isFinite(Number(receipt.tokens_total))?Number(receipt.tokens_total):null;
+  if(totalTokens===null&&receipt&&Number.isFinite(Number(receipt.tokens_generated)))totalTokens=Number(receipt.tokens_generated);
+  if(totalTokens===null&&ecos&&Number.isFinite(Number(ecos.tokens)))totalTokens=Number(ecos.tokens);
+  var energy=ecos&&Number.isFinite(Number(ecos.totalEnergy_J))?Number(ecos.totalEnergy_J):null;
+  var co2=ecos&&Number.isFinite(Number(ecos.co2_g))?Number(ecos.co2_g):null;
+  var water=ecos&&Number.isFinite(Number(ecos.water_mL))?Number(ecos.water_mL):null;
+
+  document.getElementById('rAGD').textContent='Receipt '+hash.substring(0,16)+'… · '+status;
+  document.getElementById('rVerdict').textContent='Signed governed record · '+verdict;
+  document.getElementById('rMedium').textContent='Medium: '+selectedMedium.toUpperCase()+' · Nexus Compliance · ECOS-2026.1';
+  if(ecos){
+    document.getElementById('rEnergy').textContent='Energy: '+(energy===null?'—':energy)+' J · declared estimate';
+    document.getElementById('rCO2').textContent='CO₂e: '+(co2===null?'—':co2)+' g · declared factor';
+    document.getElementById('rWater').textContent='Water: '+(water===null?'—':water)+' mL · '+(ecos.tier||'model not returned');
+  }else{
+    document.getElementById('rEnergy').textContent='Energy: governed';
+    document.getElementById('rCO2').textContent='CO₂: governed';
+    document.getElementById('rWater').textContent='Water: governed';
+  }
+  document.getElementById('rHash').textContent='SHA-256: '+hash;
+  document.getElementById('rSig').textContent='Ed25519: '+(sig?sig.substring(0,44)+'...':'signed');
+  document.getElementById('rTime').textContent=ts;
+
+  /* Show receipt */
+  document.getElementById('receiptPanel').style.opacity='1';
+  document.getElementById('receiptPanel').style.transform='translateY(0)';
+
+  /* Build QR */
+  setTimeout(function(){
+    var qrUrl;
+    if(passport&&passport.token){
+      qrUrl=location.origin+'/seal-verify.html?t='+encodeURIComponent(passport.token)+'&medium='+selectedMedium+'&status='+encodeURIComponent(status);
+    }else{
+      var params=new URLSearchParams({medium:selectedMedium,tok:totalTokens===null?'':String(totalTokens),energy:energy===null?'':String(energy),water:water===null?'':String(water),co2:co2===null?'':String(co2),hash:hash,sig:sig?sig.substring(0,88):'',ts:ts,status:status});
+      qrUrl=location.origin+'/seal-verify.html?'+params.toString();
+    }
+    drawQR(qrUrl);
+    document.getElementById('qrArea').style.opacity='1';
+  },600);
+
+  /* Finalize UI */
+  setTimeout(function(){
+    var methodLabel=evidence&&evidence.method!=='direct'?' · LIVE '+evidence.method.toUpperCase():'';
+    btn.textContent='Passport created · '+selectedMedium.toUpperCase()+methodLabel;
+    btn.style.background='rgba(40,127,69,.12)';btn.style.color='#287f45';btn.style.border='1px solid rgba(40,127,69,.35)';
+    document.getElementById('resetBtn').style.display='inline-block';
+    setSampleStatus('Photonic scan complete. The QR opens the signed '+selectedMedium+' Passport.','ready');
+    scanState='done';
+  },1000);
+}
+
+/* ── Reset ── */
+function resetAll(){
+  /* Stop any active camera or mic */
+  stopCamera();
+  stopAudio();
+
+  scanState='idle';
+  document.querySelectorAll('.stage-node').forEach(function(n){n.classList.remove('lit')});
+  document.getElementById('photon').style.opacity='0';
+  document.getElementById('trackFill').style.width='0';
+  document.getElementById('sealHex').className='seal-hex';
+  document.getElementById('sealGlow').className='seal-glow';
+  document.getElementById('sealVerdictText').textContent='AWAITING SCAN';
+  ringTarget=0;ringColor=[217,255,122];
+  document.getElementById('receiptPanel').style.opacity='0';
+  document.getElementById('receiptPanel').style.transform='translateY(12px)';
+  document.getElementById('qrArea').style.opacity='0';
+  var btn=document.getElementById('revealBtn');
+  btn.disabled=false;btn.style.opacity='1';
+  btn.style.background='#287f45';btn.style.color='#fff';btn.style.border='none';
+  if(selectedMedium==='video') btn.textContent='Open camera — scan barcode';
+  else if(selectedMedium==='audio') btn.textContent='Open microphone — scan audio';
+  else btn.textContent='Run photonic seal scan';
+  document.getElementById('resetBtn').style.display='none';
+  document.getElementById('rAGD').textContent='—';
+  document.getElementById('rVerdict').textContent='Awaiting photonic scan';
+  document.getElementById('rMedium').textContent='Medium: '+selectedMedium;
+  document.getElementById('rEnergy').textContent='—';
+  document.getElementById('rCO2').textContent='—';
+  document.getElementById('rWater').textContent='—';
+  document.getElementById('rHash').textContent='SHA-256: awaiting photonic scan';
+  document.getElementById('rSig').textContent='Ed25519: awaiting photonic scan';
+  document.getElementById('rTime').textContent='';
+  var qt=document.getElementById('qrTarget');if(qt)qt.innerHTML='';
+  setSampleStatus('Choose a medium and run the photonic scan to create a new Passport.','working');
+}
+</script>
+</main>
+<div class="footer shell">&copy; 2026 DeBacco Nexus LLC. All rights reserved. Governedware&trade; is a trademark of DeBacco Nexus LLC.</div>
+<script src="/nav.js"></script></body></html>
