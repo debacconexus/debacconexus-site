@@ -613,11 +613,59 @@ async function runPhotonScan(){
     btn.textContent='Opening microphone...';
     setSampleStatus('Requesting microphone access for acoustic seal scan. Play or speak near the device.','working');
 
+    /* Pre-check permission state and guide user */
+    if(navigator.permissions&&navigator.permissions.query){
+      try{
+        var micPerm=await navigator.permissions.query({name:'microphone'});
+        if(micPerm.state==='denied'){
+          btn.textContent='Microphone blocked';btn.style.opacity='1';btn.disabled=false;scanState='idle';
+          var sealArea=document.querySelector('.seal-ring-area');
+          var permDiv=document.createElement('div');
+          permDiv.id='micPermGuide';
+          permDiv.style.cssText='text-align:center;padding:40px 24px;';
+          permDiv.innerHTML='<div style="font-size:48px;margin-bottom:16px">🎙️</div>'
+            +'<h3 style="color:var(--paper);font-size:20px;margin-bottom:12px">Microphone Access Required</h3>'
+            +'<p style="color:var(--muted);font-size:14px;line-height:1.6;max-width:480px;margin:0 auto 24px">'
+            +'This scan captures a live acoustic signal from your microphone and hashes it cryptographically. '
+            +'Your browser has blocked microphone access for this site.</p>'
+            +'<p style="color:var(--aqua);font-size:14px;line-height:1.8;max-width:480px;margin:0 auto 24px">'
+            +'<strong>To allow access:</strong><br>'
+            +'Click the lock or settings icon in your address bar<br>'
+            +'Set Microphone to <strong>Allow</strong><br>'
+            +'Then refresh this page</p>'
+            +'<button onclick="location.reload()" style="background:var(--green);color:#fff;border:none;padding:14px 32px;font:700 14px Inter,sans-serif;cursor:pointer;letter-spacing:.02em">Refresh &amp; Retry</button>';
+          var oldGuide=document.getElementById('micPermGuide');
+          if(oldGuide)oldGuide.remove();
+          sealArea.insertBefore(permDiv,sealArea.firstChild);
+          setSampleStatus('Microphone access is blocked. Follow the steps above to allow it, then refresh.','error');
+          return;
+        }
+      }catch(e){/* permissions.query may not support microphone — proceed normally */}
+    }
+
     try{
       evidence=await startAudioListen();
     }catch(e){
-      btn.textContent='Microphone unavailable';btn.style.opacity='1';btn.disabled=false;scanState='idle';
-      setSampleStatus('Microphone access denied or unavailable. '+e.message,'error');
+      btn.textContent='Retry microphone';btn.style.opacity='1';btn.disabled=false;scanState='idle';
+      var sealArea2=document.querySelector('.seal-ring-area');
+      var permDiv2=document.createElement('div');
+      permDiv2.id='micPermGuide';
+      permDiv2.style.cssText='text-align:center;padding:40px 24px;';
+      permDiv2.innerHTML='<div style="font-size:48px;margin-bottom:16px">🎙️</div>'
+        +'<h3 style="color:var(--paper);font-size:20px;margin-bottom:12px">Microphone Access Required</h3>'
+        +'<p style="color:var(--muted);font-size:14px;line-height:1.6;max-width:480px;margin:0 auto 24px">'
+        +'This scan requires your microphone to capture a live acoustic signal. '
+        +'Please allow microphone access when prompted by your browser.</p>'
+        +'<p style="color:var(--aqua);font-size:14px;line-height:1.8;max-width:480px;margin:0 auto 24px">'
+        +'<strong>To allow access:</strong><br>'
+        +'Click the lock or settings icon in your address bar<br>'
+        +'Set Microphone to <strong>Allow</strong><br>'
+        +'Then refresh this page</p>'
+        +'<button onclick="location.reload()" style="background:var(--green);color:#fff;border:none;padding:14px 32px;font:700 14px Inter,sans-serif;cursor:pointer;letter-spacing:.02em">Refresh &amp; Retry</button>';
+      var oldGuide2=document.getElementById('micPermGuide');
+      if(oldGuide2)oldGuide2.remove();
+      sealArea2.insertBefore(permDiv2,sealArea2.firstChild);
+      setSampleStatus('Microphone access denied. Follow the steps above to allow it.','error');
       return;
     }
 
