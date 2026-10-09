@@ -307,10 +307,92 @@ function drawQR(url){
 }
 
 /* ══════════════════════════════════════════════════════════
-   LIVE CAMERA SCAN — BarcodeDetector + getUserMedia
-   Opens camera, scans for a real barcode. The barcode data
-   becomes the evidence that feeds the governed chain.
-   The chain then produces a QR code for verification.
+   CODE 128 BARCODE GENERATOR — Organic, unique every time
+   Generates a real Code 128B barcode on a canvas from
+   cryptographically random data + timestamp.
+   ══════════════════════════════════════════════════════════ */
+var CODE128B_START=104,CODE128_STOP=106;
+var CODE128_PATTERNS=[
+  '11011001100','11001101100','11001100110','10010011000','10010001100',
+  '10001001100','10011001000','10011000100','10001100100','11001001000',
+  '11001000100','11000100100','10110011100','10011011100','10011001110',
+  '10111001100','10011101100','10011100110','11001110010','11001011100',
+  '11001001110','11011100100','11001110100','11100101100','11100100110',
+  '11101100100','11100110100','11100110010','11011011000','11011000110',
+  '11000110110','10100011000','10001011000','10001000110','10110001000',
+  '10001101000','10001100010','11010001000','11000101000','11000100010',
+  '10110111000','10110001110','10001101110','10111011000','10111000110',
+  '10001110110','11101110110','11010001110','11000101110','11011101000',
+  '11011100010','11011101110','11101011000','11101000110','11100010110',
+  '11101101000','11101100010','11100011010','11101111010','11001000010',
+  '11110001010','10100110000','10100001100','10010110000','10010000110',
+  '10000101100','10000100110','10110010000','10110000100','10011010000',
+  '10011000010','10000110100','10000110010','11000010010','11001010000',
+  '11110111010','11000010100','10001111010','10100111100','10010111100',
+  '10010011110','10111100100','10011110100','10011110010','11110100100',
+  '11110010100','11110010010','11011011110','11011110110','11110110110',
+  '10101111000','10100011110','10001011110','10111101000','10111100010',
+  '11110101000','11110100010','10111011110','10111101110','11101011110',
+  '11110101110','11010000100','11010010000','11010011100','1100011101011'
+];
+
+function generateBarcode128(text){
+  var canvas=document.createElement('canvas');
+  var bars='';
+  /* Start code B */
+  bars+=CODE128_PATTERNS[CODE128B_START];
+  var checksum=CODE128B_START;
+  for(var i=0;i<text.length;i++){
+    var val=text.charCodeAt(i)-32;
+    if(val<0||val>94)val=0;
+    bars+=CODE128_PATTERNS[val];
+    checksum+=(i+1)*val;
+  }
+  bars+=CODE128_PATTERNS[checksum%103];
+  bars+=CODE128_PATTERNS[CODE128_STOP];
+
+  var barWidth=3;
+  var height=120;
+  var padding=40;
+  canvas.width=bars.length*barWidth+padding*2;
+  canvas.height=height+60;
+  var ctx=canvas.getContext('2d');
+
+  /* White background */
+  ctx.fillStyle='#ffffff';
+  ctx.fillRect(0,0,canvas.width,canvas.height);
+
+  /* Draw bars */
+  ctx.fillStyle='#000000';
+  for(var b=0;b<bars.length;b++){
+    if(bars[b]==='1'){
+      ctx.fillRect(padding+b*barWidth,20,barWidth,height);
+    }
+  }
+
+  /* Label below */
+  ctx.fillStyle='#000000';
+  ctx.font='bold 14px monospace';
+  ctx.textAlign='center';
+  ctx.fillText(text,canvas.width/2,height+45);
+
+  return canvas;
+}
+
+function generateOrganicBarcodeData(){
+  /* Crypto-random bytes + timestamp = unique every scan */
+  var bytes=new Uint8Array(6);
+  crypto.getRandomValues(bytes);
+  var hex='';
+  bytes.forEach(function(b){hex+=b.toString(16).padStart(2,'0');});
+  var ts=Date.now().toString(36).toUpperCase();
+  return 'DN-'+ts+'-'+hex.toUpperCase();
+}
+
+/* ══════════════════════════════════════════════════════════
+   LIVE CAMERA SCAN — Generates barcode on screen, then
+   camera scans it with BarcodeDetector. Barcode data is
+   organic (crypto.getRandomValues + timestamp).
    ══════════════════════════════════════════════════════════ */
 function startCameraScan(){
   return new Promise(function(resolve,reject){
@@ -323,7 +405,23 @@ function startCameraScan(){
     var container=document.querySelector('.seal-ring-container');
     container.style.display='none';
 
-    /* Build camera viewfinder */
+    /* Generate organic barcode data and render it */
+    var barcodeValue=generateOrganicBarcodeData();
+    var barcodeCanvas=generateBarcode128(barcodeValue);
+
+    /* Build barcode display area */
+    var bcWrap=document.createElement('div');
+    bcWrap.id='barcodeDisplay';
+    bcWrap.style.cssText='text-align:center;margin-bottom:20px;padding:20px;background:#fff;border:2px solid var(--green);';
+    var bcLabel=document.createElement('div');
+    bcLabel.style.cssText='font:800 11px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--green);margin-bottom:12px';
+    bcLabel.textContent='GENERATED SEAL BARCODE — SCAN WITH CAMERA BELOW';
+    bcWrap.appendChild(bcLabel);
+    barcodeCanvas.style.cssText='max-width:100%;height:auto';
+    bcWrap.appendChild(barcodeCanvas);
+    sealArea.insertBefore(bcWrap,sealArea.firstChild);
+
+    /* Build camera viewfinder below the barcode */
     var camDiv=document.createElement('div');
     camDiv.id='liveCameraView';
     camDiv.className='camera-view';
@@ -335,11 +433,11 @@ function startCameraScan(){
 
     var overlay=document.createElement('div');
     overlay.className='scan-overlay';
-    overlay.innerHTML='<div class="scan-corner tl"></div><div class="scan-corner tr"></div><div class="scan-corner bl"></div><div class="scan-corner br"></div><div class="scan-beam"></div><div class="scan-label">POINT CAMERA AT A BARCODE</div>';
+    overlay.innerHTML='<div class="scan-corner tl"></div><div class="scan-corner tr"></div><div class="scan-corner bl"></div><div class="scan-corner br"></div><div class="scan-beam"></div><div class="scan-label">POINT CAMERA AT BARCODE ABOVE</div>';
 
     camDiv.appendChild(video);
     camDiv.appendChild(overlay);
-    sealArea.insertBefore(camDiv,sealArea.firstChild);
+    bcWrap.after(camDiv);
 
     navigator.mediaDevices.getUserMedia({
       video:{facingMode:'environment',width:{ideal:1280},height:{ideal:720}}
@@ -350,7 +448,6 @@ function startCameraScan(){
       video.onloadedmetadata=function(){
         video.play();
 
-        /* Try native BarcodeDetector */
         if(typeof BarcodeDetector!=='undefined'){
           var detector=new BarcodeDetector({formats:['qr_code','code_128','code_39','data_matrix','ean_13','ean_8','upc_a','upc_e']});
 
@@ -364,7 +461,10 @@ function startCameraScan(){
                 overlay.querySelector('.scan-label').textContent='BARCODE CAPTURED — '+format.toUpperCase();
                 setTimeout(function(){
                   stopCamera();
-                  resolve({data:data,format:format,method:'BarcodeDetector'});
+                  /* Remove the barcode display */
+                  var bcd=document.getElementById('barcodeDisplay');
+                  if(bcd)bcd.remove();
+                  resolve({data:data,format:format,method:'BarcodeDetector',generated:barcodeValue});
                 },400);
                 return;
               }
@@ -376,31 +476,24 @@ function startCameraScan(){
           setTimeout(function(){scanFrame()},300);
 
         }else{
-          /* Fallback: capture a frame and hash it if no BarcodeDetector */
-          overlay.querySelector('.scan-label').textContent='CAPTURING VISUAL FRAME';
+          /* No BarcodeDetector — use the generated barcode data directly */
+          overlay.querySelector('.scan-label').textContent='BROWSER LACKS BARCODE API — USING GENERATED DATA';
           setTimeout(function(){
-            var c=document.createElement('canvas');
-            c.width=video.videoWidth;c.height=video.videoHeight;
-            c.getContext('2d').drawImage(video,0,0);
-            c.toBlob(function(blob){
-              blob.arrayBuffer().then(function(buf){
-                crypto.subtle.digest('SHA-256',buf).then(function(hashBuf){
-                  var arr=new Uint8Array(hashBuf);
-                  var hex='';arr.forEach(function(b){hex+=b.toString(16).padStart(2,'0');});
-                  camDiv.classList.add('scan-detected');
-                  overlay.querySelector('.scan-label').textContent='VISUAL FRAME CAPTURED';
-                  setTimeout(function(){
-                    stopCamera();
-                    resolve({data:hex,format:'visual-frame',method:'FrameCapture'});
-                  },400);
-                });
-              });
-            },'image/png');
+            camDiv.classList.add('scan-detected');
+            overlay.querySelector('.scan-label').textContent='SEAL BARCODE ACCEPTED';
+            setTimeout(function(){
+              stopCamera();
+              var bcd=document.getElementById('barcodeDisplay');
+              if(bcd)bcd.remove();
+              resolve({data:barcodeValue,format:'code_128',method:'Generated',generated:barcodeValue});
+            },400);
           },2000);
         }
       };
     }).catch(function(err){
       if(camDiv.parentNode)camDiv.parentNode.removeChild(camDiv);
+      var bcd=document.getElementById('barcodeDisplay');
+      if(bcd)bcd.remove();
       container.style.display='';
       reject(err);
     });
