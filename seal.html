@@ -814,7 +814,9 @@ async function runPhotonScan(){
   }
   document.getElementById('rHash').textContent='SHA-256: '+hash;
   document.getElementById('rSig').textContent='Ed25519: '+(sig?sig.substring(0,44)+'...':'signed');
-  document.getElementById('rTime').textContent=ts;
+  var tsLocal=ts;
+  try{var dd=new Date(ts);if(!isNaN(dd.getTime()))tsLocal=dd.toLocaleString('en-US',{timeZone:'America/Los_Angeles',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',timeZoneName:'short'});}catch(e){}
+  document.getElementById('rTime').textContent=tsLocal;
 
   /* Show receipt */
   document.getElementById('receiptPanel').style.opacity='1';

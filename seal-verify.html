@@ -116,7 +116,7 @@ h1 em{font:400 1em Georgia,serif;color:var(--lime)}
     else if(sealName.toLowerCase().indexOf('text')!==-1)mediumDisplay='Text';
   }
   var tsDisplay=ts;
-  if(ts){try{var d=new Date(ts);if(!isNaN(d.getTime()))tsDisplay=d.toUTCString();}catch(e){}}
+  if(ts){try{var d=new Date(ts);if(!isNaN(d.getTime()))tsDisplay=d.toLocaleString('en-US',{timeZone:'America/Los_Angeles',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',timeZoneName:'short'});}catch(e){}}
   document.getElementById('noData').style.display='none';
   var wrap=document.getElementById('content');
   var h='';
