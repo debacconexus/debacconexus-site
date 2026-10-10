@@ -658,6 +658,124 @@ function stopAudio(){
 }
 
 /* ══════════════════════════════════════════════════════════
+   LIVE TEXT SCAN — Governed Document Scanner
+   Generates organic compliance text, renders it, scans it,
+   and hashes via SHA-256. Same pattern as VIDEO/AUDIO.
+   ══════════════════════════════════════════════════════════ */
+function startTextScan(){
+  return new Promise(function(resolve){
+    var sealArea=document.querySelector('.seal-ring-area');
+    var container=document.querySelector('.seal-ring-container');
+    container.style.display='none';
+
+    /* Generate organic document data */
+    var bytes=new Uint8Array(8);
+    crypto.getRandomValues(bytes);
+    var hexId='';
+    for(var i=0;i<8;i++) hexId+=bytes[i].toString(16).padStart(2,'0');
+    var ts=Date.now().toString(36).toUpperCase();
+    var docId='TX-'+ts+'-'+hexId.toUpperCase();
+    var now=new Date();
+    var tsDisplay=now.toLocaleString('en-US',{timeZone:'America/Los_Angeles',year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',second:'2-digit',timeZoneName:'short'});
+
+    /* Build the governed text block */
+    var lines=[
+      'NEXUS COMPLIANCE — GOVERNED TEXT DOCUMENT',
+      '═══════════════════════════════════════════',
+      'Document ID: '+docId,
+      'Timestamp:   '+tsDisplay,
+      'Standard:    ECOS-2026.1',
+      'Medium:      TEXT',
+      '───────────────────────────────────────────',
+      'This document is submitted for governed',
+      'inference under Nexus Compliance standards.',
+      'The content herein is sealed cryptograph-',
+      'ically and receipted at point of capture.',
+      '───────────────────────────────────────────',
+      'Patent Pending: USPTO 19/571,156',
+      'Issuer: DeBacco Nexus LLC · Governedware™'
+    ];
+    var fullText=lines.join('\n');
+
+    /* Scanner viewfinder — text sits INSIDE it */
+    var scanBox=document.createElement('div');
+    scanBox.id='textScanView';
+    scanBox.className='camera-view';
+    scanBox.style.cssText='position:relative;width:320px;height:240px;margin:0 auto;background:#0a0a0a;border:2px solid rgba(125,229,220,.3);overflow:hidden;display:flex;align-items:center;justify-content:center';
+
+    /* Corner brackets */
+    var corners=document.createElement('div');
+    corners.className='scan-overlay';
+    corners.innerHTML='<div class="scan-corner tl"></div><div class="scan-corner tr"></div><div class="scan-corner bl"></div><div class="scan-corner br"></div>';
+    corners.style.cssText='position:absolute;inset:0;pointer-events:none;z-index:3';
+    scanBox.appendChild(corners);
+
+    /* Text block inside the scanner */
+    var textBlock=document.createElement('pre');
+    textBlock.textContent=fullText;
+    textBlock.style.cssText='position:relative;z-index:1;font:600 9px/1.5 monospace;color:var(--lime);padding:12px 16px;margin:0;white-space:pre;letter-spacing:.02em';
+    scanBox.appendChild(textBlock);
+
+    /* Scan beam */
+    var beam=document.createElement('div');
+    beam.style.cssText='position:absolute;left:8px;right:8px;height:3px;background:linear-gradient(90deg,transparent 0%,var(--lime) 20%,#fff 50%,var(--lime) 80%,transparent 100%);box-shadow:0 0 8px var(--lime),0 0 20px #fff;z-index:4;top:10px;animation:txScanBeam 2.2s ease-in-out forwards';
+    scanBox.appendChild(beam);
+
+    var styleEl=document.createElement('style');
+    styleEl.textContent='@keyframes txScanBeam{0%{top:10px;opacity:1}40%{top:calc(50% + 50px);opacity:1}60%{top:calc(50% - 50px);opacity:1}90%{top:calc(100% - 16px);opacity:1}100%{top:calc(100% - 16px);opacity:0}}';
+    scanBox.appendChild(styleEl);
+
+    /* Label below scanner */
+    var label=document.createElement('div');
+    label.style.cssText='text-align:center;margin-top:12px;font:800 11px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:var(--aqua)';
+    label.textContent='SCANNING GOVERNED DOCUMENT';
+
+    var statusLine=document.createElement('div');
+    statusLine.style.cssText='text-align:center;margin-top:8px;font:600 11px monospace;color:var(--muted)';
+    statusLine.textContent='Reading document content...';
+
+    var wrap=document.createElement('div');
+    wrap.id='textScanWrap';
+    wrap.appendChild(scanBox);
+    wrap.appendChild(label);
+    wrap.appendChild(statusLine);
+    sealArea.insertBefore(wrap,sealArea.firstChild);
+
+    /* Animate scan sequence */
+    setTimeout(function(){
+      label.textContent='DOCUMENT DETECTED';
+      label.style.color='var(--lime)';
+      statusLine.textContent=docId;
+    },1400);
+
+    setTimeout(function(){
+      label.textContent='HASHING DOCUMENT CONTENT';
+      statusLine.textContent='SHA-256 via Web Crypto...';
+    },2000);
+
+    /* Hash the full document text with real SHA-256 */
+    var encoder=new TextEncoder();
+    crypto.subtle.digest('SHA-256',encoder.encode(fullText)).then(function(hashBuf){
+      var arr=new Uint8Array(hashBuf);
+      var hex='';arr.forEach(function(b){hex+=b.toString(16).padStart(2,'0');});
+
+      setTimeout(function(){
+        scanBox.style.borderColor='var(--lime)';
+        scanBox.style.boxShadow='0 0 24px rgba(217,255,122,.25)';
+        label.textContent='DOCUMENT CAPTURED';
+        statusLine.textContent='SHA-256: '+hex.substring(0,32)+'…';
+
+        setTimeout(function(){
+          wrap.remove();
+          container.style.display='';
+          resolve({data:docId,hash:hex,format:'governed_text',method:'DocumentScanner'});
+        },600);
+      },2400);
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
    MAIN: Run photonic seal scan — LIVE by medium
    ══════════════════════════════════════════════════════════ */
 async function runPhotonScan(){
@@ -706,11 +824,15 @@ async function runPhotonScan(){
     btn.textContent='Waveform captured — running governed chain...';
     setSampleStatus('Acoustic waveform scanned: '+evidence.data+'. SHA-256: '+evidence.hash.substring(0,16)+'… Running governed chain.','working');
 
-  /* ── TEXT: Direct governed event ── */
+  /* ── TEXT: Governed document scan ── */
   }else{
-    btn.textContent='Scanning — text...';
-    setSampleStatus('Photonic scan initiated. Running governed text event.','working');
-    evidence={data:'text-direct',method:'direct'};
+    btn.textContent='Generating governed document...';
+    setSampleStatus('Generating organic governed document for photonic seal scan.','working');
+
+    evidence=await startTextScan();
+
+    btn.textContent='Document captured — running governed chain...';
+    setSampleStatus('Document scanned: '+evidence.data+'. SHA-256: '+evidence.hash.substring(0,16)+'… Running governed chain.','working');
   }
 
   /* ── Pipeline animation + API call in parallel ── */
@@ -719,7 +841,7 @@ async function runPhotonScan(){
     medium:selectedMedium
   };
   /* Include evidence from live scan */
-  if(evidence&&evidence.data!=='text-direct'){
+  if(evidence){
     apiBody.evidence=evidence.data;
     apiBody.captureMethod=evidence.method;
   }
