@@ -96,7 +96,7 @@ canvas#particles.active{opacity:1}
 <div id="sealReveal" style="padding:60px 0;border-top:1px solid var(--line)">
 <div class="eyebrow">Live demonstration — photonic seal scan</div>
 <h2 style="font-size:clamp(24px,4vw,36px);letter-spacing:-.04em;margin-bottom:12px">Scan any medium. <em style="font:400 1em Georgia,serif;color:var(--lime)">See the Passport form.</em></h2>
-<p style="color:var(--muted);font-size:15px;line-height:1.6;max-width:650px;margin:0 auto 24px;text-align:center">Choose a medium. <strong style="color:var(--paper)">Video</strong> opens your camera to physically scan a barcode. <strong style="color:var(--paper)">Audio</strong> opens your microphone to capture a live acoustic signal. <strong style="color:var(--paper)">Text</strong> runs a direct governed event. Each scan produces a signed Carbon Footprint Passport.</p>
+<p style="color:var(--muted);font-size:15px;line-height:1.6;max-width:650px;margin:0 auto 24px;text-align:center">Choose a medium. <strong style="color:var(--paper)">Video</strong> scans a barcode. <strong style="color:var(--paper)">Audio</strong> scans an acoustic waveform. <strong style="color:var(--paper)">Text</strong> scans a governed document. Each scan produces a signed Carbon Footprint Passport. <strong style="color:#e05550">Adversarial</strong> submits tampered evidence to demonstrate rejection.</p>
 
 <!-- Medium selector -->
 <div class="medium-selector">
@@ -111,6 +111,10 @@ AUDIO
 <button class="medium-btn" data-medium="video" onclick="selectMedium('video')">
 <svg viewBox="0 0 24 24"><path d="M17 10.5V7a1 1 0 0 0-1-1H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4z"/></svg>
 VIDEO
+</button>
+<button class="medium-btn" data-medium="adversarial" onclick="selectMedium('adversarial')" style="border-color:rgba(179,61,54,.4);color:#e05550">
+<svg viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm0 3.99L19.53 19H4.47L12 5.99zM11 16h2v2h-2v-2zm0-6h2v4h-2v-4z" fill="currentColor"/></svg>
+ADVERSARIAL
 </button>
 </div>
 
@@ -214,9 +218,10 @@ function selectMedium(m){
   document.getElementById('rMedium').textContent='Medium: '+m;
   /* Update button label to reflect medium */
   var btn=document.getElementById('revealBtn');
-  if(m==='video') btn.textContent='Open camera — scan barcode';
-  else if(m==='audio') btn.textContent='Open microphone — scan audio';
-  else btn.textContent='Run photonic seal scan';
+  if(m==='video') btn.textContent='Scan barcode';
+  else if(m==='audio') btn.textContent='Scan acoustic waveform';
+  else if(m==='adversarial') btn.textContent='Submit tampered evidence';
+  else btn.textContent='Scan governed document';
 }
 
 /* ── Particle system ── */
@@ -776,6 +781,116 @@ function startTextScan(){
 }
 
 /* ══════════════════════════════════════════════════════════
+   ADVERSARIAL SCAN — Tampered Evidence Demo
+   Generates corrupted/tampered evidence to demonstrate
+   that the governance gate rejects invalid submissions.
+   ══════════════════════════════════════════════════════════ */
+function startAdversarialScan(){
+  return new Promise(function(resolve){
+    var sealArea=document.querySelector('.seal-ring-area');
+    var container=document.querySelector('.seal-ring-container');
+    container.style.display='none';
+
+    /* Generate tampered document */
+    var bytes=new Uint8Array(8);
+    crypto.getRandomValues(bytes);
+    var hexId='';
+    for(var i=0;i<8;i++) hexId+=bytes[i].toString(16).padStart(2,'0');
+    var docId='TAMPERED-'+hexId.toUpperCase();
+
+    var lines=[
+      '██ TAMPERED EVIDENCE — INTEGRITY VIOLATED ██',
+      '═══════════════════════════════════════════',
+      'Document ID: '+docId,
+      'WARNING: Hash chain broken',
+      'WARNING: Signature mismatch detected',
+      'WARNING: Timestamp forged',
+      '───────────────────────────────────────────',
+      'This document has been intentionally',
+      'corrupted to demonstrate governance',
+      'gate rejection. The hash does not match',
+      'the claimed receipt. The seal MUST fail.',
+      '───────────────────────────────────────────',
+      'Expected: REJECTION · NOT CERTIFIED',
+      'Gate: CLOSED'
+    ];
+    var fullText=lines.join('\n');
+
+    /* Scanner viewfinder — tampered text inside, red-tinted */
+    var scanBox=document.createElement('div');
+    scanBox.id='advScanView';
+    scanBox.className='camera-view';
+    scanBox.style.cssText='position:relative;width:320px;height:240px;margin:0 auto;background:#0a0808;border:2px solid rgba(179,61,54,.5);overflow:hidden;display:flex;align-items:center;justify-content:center';
+
+    /* Corner brackets — red */
+    var corners=document.createElement('div');
+    corners.className='scan-overlay';
+    corners.innerHTML='<div class="scan-corner tl" style="border-color:#e05550"></div><div class="scan-corner tr" style="border-color:#e05550"></div><div class="scan-corner bl" style="border-color:#e05550"></div><div class="scan-corner br" style="border-color:#e05550"></div>';
+    corners.style.cssText='position:absolute;inset:0;pointer-events:none;z-index:3';
+    scanBox.appendChild(corners);
+
+    /* Tampered text block */
+    var textBlock=document.createElement('pre');
+    textBlock.textContent=fullText;
+    textBlock.style.cssText='position:relative;z-index:1;font:600 9px/1.5 monospace;color:#e05550;padding:12px 16px;margin:0;white-space:pre;letter-spacing:.02em';
+    scanBox.appendChild(textBlock);
+
+    /* Red scan beam */
+    var beam=document.createElement('div');
+    beam.style.cssText='position:absolute;left:8px;right:8px;height:3px;background:linear-gradient(90deg,transparent 0%,#e05550 20%,#ff3333 50%,#e05550 80%,transparent 100%);box-shadow:0 0 8px #e05550,0 0 20px #ff3333;z-index:4;top:10px;animation:advScanBeam 2.2s ease-in-out forwards';
+    scanBox.appendChild(beam);
+
+    var styleEl=document.createElement('style');
+    styleEl.textContent='@keyframes advScanBeam{0%{top:10px;opacity:1}40%{top:calc(50% + 50px);opacity:1}60%{top:calc(50% - 50px);opacity:1}90%{top:calc(100% - 16px);opacity:1}100%{top:calc(100% - 16px);opacity:0}}';
+    scanBox.appendChild(styleEl);
+
+    var label=document.createElement('div');
+    label.style.cssText='text-align:center;margin-top:12px;font:800 11px Inter,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#e05550';
+    label.textContent='SCANNING TAMPERED EVIDENCE';
+
+    var statusLine=document.createElement('div');
+    statusLine.style.cssText='text-align:center;margin-top:8px;font:600 11px monospace;color:var(--muted)';
+    statusLine.textContent='Analysing document integrity...';
+
+    var wrap=document.createElement('div');
+    wrap.id='advScanWrap';
+    wrap.appendChild(scanBox);
+    wrap.appendChild(label);
+    wrap.appendChild(statusLine);
+    sealArea.insertBefore(wrap,sealArea.firstChild);
+
+    setTimeout(function(){
+      label.textContent='INTEGRITY VIOLATION DETECTED';
+      statusLine.textContent=docId;
+    },1400);
+
+    setTimeout(function(){
+      label.textContent='HASHING TAMPERED DATA';
+      statusLine.textContent='SHA-256 via Web Crypto...';
+    },2000);
+
+    var encoder=new TextEncoder();
+    crypto.subtle.digest('SHA-256',encoder.encode(fullText)).then(function(hashBuf){
+      var arr=new Uint8Array(hashBuf);
+      var hex='';arr.forEach(function(b){hex+=b.toString(16).padStart(2,'0');});
+
+      setTimeout(function(){
+        scanBox.style.borderColor='#e05550';
+        scanBox.style.boxShadow='0 0 24px rgba(224,85,80,.35)';
+        label.textContent='TAMPERED EVIDENCE CAPTURED';
+        statusLine.textContent='SHA-256: '+hex.substring(0,32)+'…';
+
+        setTimeout(function(){
+          wrap.remove();
+          container.style.display='';
+          resolve({data:docId,hash:hex,format:'tampered_document',method:'AdversarialScanner',tampered:true});
+        },600);
+      },2400);
+    });
+  });
+}
+
+/* ══════════════════════════════════════════════════════════
    MAIN: Run photonic seal scan — LIVE by medium
    ══════════════════════════════════════════════════════════ */
 async function runPhotonScan(){
@@ -823,6 +938,16 @@ async function runPhotonScan(){
 
     btn.textContent='Waveform captured — running governed chain...';
     setSampleStatus('Acoustic waveform scanned: '+evidence.data+'. SHA-256: '+evidence.hash.substring(0,16)+'… Running governed chain.','working');
+
+  /* ── ADVERSARIAL: Tampered evidence scan ── */
+  }else if(selectedMedium==='adversarial'){
+    btn.textContent='Generating tampered evidence...';
+    setSampleStatus('Generating corrupted document to test governance gate rejection.','working');
+
+    evidence=await startAdversarialScan();
+
+    btn.textContent='Tampered evidence captured — submitting to chain...';
+    setSampleStatus('Tampered scan: '+evidence.data+'. SHA-256: '+evidence.hash.substring(0,16)+'… Submitting to governance gate.','working');
 
   /* ── TEXT: Governed document scan ── */
   }else{
@@ -901,19 +1026,36 @@ async function runPhotonScan(){
 
   /* Form the seal */
   await new Promise(function(r){setTimeout(r,300)});
-  document.getElementById('sealHex').classList.add('formed');
-  document.getElementById('sealGlow').classList.add('on');
-  document.getElementById('sealVerdictText').textContent='GREEN · CLEARED';
+  var sealHex=document.getElementById('sealHex');
+  var sealGlow=document.getElementById('sealGlow');
+  sealHex.classList.add('formed');
+  sealGlow.classList.add('on');
 
-  var rect=document.getElementById('sealHex').getBoundingClientRect();
+  var isAdversarial=selectedMedium==='adversarial'||(evidence&&evidence.tampered);
+  if(isAdversarial){
+    document.getElementById('sealVerdictText').textContent='RED · NOT CERTIFIED';
+    sealHex.style.background='radial-gradient(circle at 40% 35%,#3a1515 0%,#1a0808 70%)';
+    sealGlow.style.background='radial-gradient(circle,rgba(224,85,80,.25) 0%,transparent 70%)';
+    ringColor=[224,85,80];
+  }else{
+    document.getElementById('sealVerdictText').textContent='GREEN · CLEARED';
+  }
+
+  var rect=sealHex.getBoundingClientRect();
   var cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
-  spawnParticles(cx,cy,'#d9ff7a',50);
-  spawnParticles(cx,cy,'#7de5dc',30);
+  if(isAdversarial){
+    spawnParticles(cx,cy,'#e05550',50);
+    spawnParticles(cx,cy,'#ff3333',30);
+  }else{
+    spawnParticles(cx,cy,'#d9ff7a',50);
+    spawnParticles(cx,cy,'#7de5dc',30);
+  }
 
   /* Populate receipt with real data */
   verdict=(receipt&&receipt.verdict)||verdict||'CERTIFIED';
   var released=receipt&&typeof receipt.released==='boolean'?receipt.released:verdict==='CERTIFIED';
-  var status=released?'GREEN · CLEARED':'YELLOW · REVIEW NEEDED';
+  if(isAdversarial){released=false;verdict='REJECTED — TAMPERED EVIDENCE';}
+  var status=isAdversarial?'RED · NOT CERTIFIED':(released?'GREEN · CLEARED':'YELLOW · REVIEW NEEDED');
   var ts=(receipt&&receipt.timestamp)||new Date().toISOString();
   var totalTokens=receipt&&Number.isFinite(Number(receipt.tokens_total))?Number(receipt.tokens_total):null;
   if(totalTokens===null&&receipt&&Number.isFinite(Number(receipt.tokens_generated)))totalTokens=Number(receipt.tokens_generated);
@@ -946,7 +1088,7 @@ async function runPhotonScan(){
 
   /* Build QR — keep URL short and clean for phone scanners */
   setTimeout(function(){
-    var qrStatus=released?'GREEN':'YELLOW';
+    var qrStatus=isAdversarial?'RED':(released?'GREEN':'YELLOW');
     var qrUrl;
     var params=new URLSearchParams({medium:selectedMedium,status:qrStatus,ts:ts});
     if(passport&&passport.token)params.set('t',passport.token);
@@ -964,10 +1106,16 @@ async function runPhotonScan(){
   /* Finalize UI */
   setTimeout(function(){
     var methodLabel=evidence&&evidence.method!=='direct'?' · LIVE '+evidence.method.toUpperCase():'';
-    btn.textContent='Passport created · '+selectedMedium.toUpperCase()+methodLabel;
-    btn.style.background='rgba(40,127,69,.12)';btn.style.color='#287f45';btn.style.border='1px solid rgba(40,127,69,.35)';
+    if(isAdversarial){
+      btn.textContent='REJECTED · '+selectedMedium.toUpperCase()+methodLabel;
+      btn.style.background='rgba(179,61,54,.12)';btn.style.color='#e05550';btn.style.border='1px solid rgba(179,61,54,.35)';
+      setSampleStatus('Governance gate rejected tampered evidence. The QR opens the RED Passport.','ready');
+    }else{
+      btn.textContent='Passport created · '+selectedMedium.toUpperCase()+methodLabel;
+      btn.style.background='rgba(40,127,69,.12)';btn.style.color='#287f45';btn.style.border='1px solid rgba(40,127,69,.35)';
+      setSampleStatus('Photonic scan complete. The QR opens the signed '+selectedMedium+' Passport.','ready');
+    }
     document.getElementById('resetBtn').style.display='inline-block';
-    setSampleStatus('Photonic scan complete. The QR opens the signed '+selectedMedium+' Passport.','ready');
     scanState='done';
   },1000);
 }
@@ -982,8 +1130,8 @@ function resetAll(){
   document.querySelectorAll('.stage-node').forEach(function(n){n.classList.remove('lit')});
   document.getElementById('photon').style.opacity='0';
   document.getElementById('trackFill').style.width='0';
-  document.getElementById('sealHex').className='seal-hex';
-  document.getElementById('sealGlow').className='seal-glow';
+  var sH=document.getElementById('sealHex');sH.className='seal-hex';sH.style.background='';
+  var sG=document.getElementById('sealGlow');sG.className='seal-glow';sG.style.background='';
   document.getElementById('sealVerdictText').textContent='AWAITING SCAN';
   ringTarget=0;ringColor=[217,255,122];
   document.getElementById('receiptPanel').style.opacity='0';
@@ -993,8 +1141,9 @@ function resetAll(){
   btn.disabled=false;btn.style.opacity='1';
   btn.style.background='#287f45';btn.style.color='#fff';btn.style.border='none';
   if(selectedMedium==='video') btn.textContent='Open camera — scan barcode';
-  else if(selectedMedium==='audio') btn.textContent='Open microphone — scan audio';
-  else btn.textContent='Run photonic seal scan';
+  else if(selectedMedium==='audio') btn.textContent='Scan acoustic waveform';
+  else if(selectedMedium==='adversarial') btn.textContent='Submit tampered evidence';
+  else btn.textContent='Scan governed document';
   document.getElementById('resetBtn').style.display='none';
   document.getElementById('rAGD').textContent='—';
   document.getElementById('rVerdict').textContent='Awaiting photonic scan';
