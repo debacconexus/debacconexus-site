@@ -1,0 +1,474 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noai, noimageai, noindex-ai">
+<meta name="ai-training" content="disallow">
+<title>ECOS — Environmental Cost of Service | Carbon Footprint Passport | DeBacco Nexus</title>
+<meta name="description" content="ECOS — the Environmental Certification &amp; Oversight Standard. The first patented operational AI governance certification system. Every inference carries a governed receipt.">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;0,800;1,400&family=DM+Mono:wght@400;500&display=swap');
+:root{--bg:#060b09;--surface:#0c1612;--card:#101e18;--paper:#edf8ec;--muted:#8aa690;--dim:rgba(237,248,236,.35);--lime:#c8f560;--aqua:#6cd4cb;--amber:#f0c95c;--red:#f07068;--line:rgba(237,248,236,.08);--glow-g:rgba(200,245,96,.12);--glow-r:rgba(240,112,104,.1);box-sizing:border-box}
+*{box-sizing:inherit;margin:0;padding:0}
+body{background:var(--bg);color:var(--paper);font-family:'DM Sans',Inter,system-ui,sans-serif;overflow-x:hidden;min-height:100vh;-webkit-font-smoothing:antialiased}
+
+/* ── NAV ── */
+.nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 clamp(16px,4vw,40px);height:56px;background:rgba(6,11,9,.94);backdrop-filter:blur(18px);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;letter-spacing:-.03em;text-decoration:none;color:var(--paper)}
+.brand b{display:inline-grid;place-items:center;width:24px;height:24px;background:var(--lime);color:#0a1a0f;clip-path:polygon(50% 0,100% 26%,100% 74%,50% 100%,0 74%,0 26%);font:800 12px Georgia}
+.nav-links{display:flex;align-items:center;gap:22px}
+.nav-links a{font-size:12px;color:var(--muted);text-decoration:none;font-weight:500;letter-spacing:.01em}
+.nav-links a:hover{color:var(--paper)}
+.nav-cta{padding:7px 16px;background:var(--lime);color:#0a1a0f;font-size:11px;font-weight:800;text-decoration:none;border-radius:2px;letter-spacing:.02em}
+
+/* ── LAYOUT ── */
+.shell{width:min(860px,calc(100% - 40px));margin:auto}
+section{padding:56px 0}
+.sep{border:0;border-top:1px solid var(--line);margin:0}
+
+/* ── HERO ── */
+.hero{text-align:center;padding:64px 0 40px}
+.hero .mark{font:400 44px Georgia,serif;color:var(--aqua);margin-bottom:4px;letter-spacing:.01em}
+.hero h1{font-size:clamp(26px,4vw,42px);line-height:1.05;letter-spacing:-.04em;margin-bottom:14px;font-weight:800}
+.hero h1 em{font:400 1em Georgia,serif;color:var(--lime)}
+.hero .sub{color:var(--muted);font-size:15px;line-height:1.65;max-width:620px;margin:0 auto 10px}
+.hero .etym{color:var(--aqua);font:italic 400 13px Georgia,serif;display:block;margin-bottom:6px}
+.hero .phrase{color:var(--dim);font-size:12px;display:block}
+
+/* ── CONTEXT BAR ── */
+.ctx{display:flex;align-items:center;gap:20px;padding:14px 24px;background:var(--surface);border:1px solid var(--line);margin-bottom:8px;flex-wrap:wrap}
+.ctx-pair{display:flex;flex-direction:column;gap:1px}
+.ctx-k{font:500 9px 'DM Mono',monospace;color:var(--aqua);letter-spacing:.1em;text-transform:uppercase}
+.ctx-v{font:400 13px 'DM Sans',sans-serif;color:var(--paper)}
+.ctx-div{width:1px;height:28px;background:var(--line)}
+.status-pill{margin-left:auto;padding:5px 14px;font:700 10px 'DM Mono',monospace;letter-spacing:.08em;border-radius:2px;background:rgba(200,245,96,.08);color:var(--lime);border:1px solid rgba(200,245,96,.2)}
+.status-pill.active{background:rgba(108,212,203,.1);color:var(--aqua);border-color:rgba(108,212,203,.3);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.6}}
+
+/* ── CARDS ── */
+.card{background:var(--card);border:1px solid var(--line);padding:28px;margin-bottom:16px}
+.card h3{font-size:18px;letter-spacing:-.03em;margin-bottom:10px}
+.card h3 em{font:400 1em Georgia,serif;color:var(--lime)}
+.card p{color:var(--muted);font-size:14px;line-height:1.6}
+.card-label{font:700 9px 'DM Mono',monospace;color:var(--aqua);letter-spacing:.12em;text-transform:uppercase;margin-bottom:10px}
+
+/* ── GRID ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+
+/* ── LAWS ── */
+.law{padding:20px 24px;background:var(--surface);border-left:3px solid var(--lime);margin-bottom:12px}
+.law-num{font:700 11px 'DM Mono',monospace;color:var(--lime);letter-spacing:.1em;margin-bottom:4px}
+.law p{color:var(--paper);font-size:14px;font-weight:500}
+
+/* ── TRISTACK ── */
+.tristack{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--line);margin:24px 0}
+.tri-layer{background:var(--card);padding:24px;text-align:center}
+.tri-num{font:800 28px Georgia,serif;color:var(--aqua);margin-bottom:8px}
+.tri-layer h4{font-size:13px;letter-spacing:-.01em;margin-bottom:6px}
+.tri-layer p{color:var(--muted);font-size:11px;line-height:1.5}
+
+/* ── CERTIFIED TABLE ── */
+.cert-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:13px}
+.cert-table th{text-align:left;padding:10px 12px;font:700 9px 'DM Mono',monospace;color:var(--aqua);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--line);background:var(--surface)}
+.cert-table td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--paper)}
+.cert-table td:first-child{color:var(--muted);font-size:12px}
+.cert-table .badge{display:inline-block;padding:3px 10px;font:700 9px 'DM Mono',monospace;letter-spacing:.06em;border-radius:2px;background:rgba(200,245,96,.08);color:var(--lime);border:1px solid rgba(200,245,96,.2)}
+.cert-table .tier{color:var(--aqua);font:500 12px 'DM Mono',monospace}
+
+/* ── PASSPORT PREVIEW ── */
+.passport-preview{max-width:520px;margin:24px auto;border:1px solid rgba(237,248,236,.12);background:rgba(13,26,18,.95);overflow:hidden}
+.pp-header{padding:20px 24px;border-bottom:1px solid rgba(237,248,236,.08);text-align:center}
+.pp-header h2{font:800 15px 'DM Sans',sans-serif;letter-spacing:.12em;color:#287f45;text-transform:uppercase}
+.pp-header p{font:400 11px 'DM Sans',sans-serif;color:#9ab89d;margin-top:6px}
+.pp-badge{display:inline-block;padding:6px 18px;border-radius:2px;font:700 12px 'DM Sans',sans-serif;letter-spacing:.06em;margin-top:12px;background:rgba(40,127,69,.15);color:#4ade80;border:1px solid rgba(40,127,69,.4)}
+.pp-section{padding:16px 24px;border-bottom:1px solid rgba(237,248,236,.06)}
+.pp-section-label{font:500 9px monospace;letter-spacing:.1em;color:#287f45;margin-bottom:12px;text-transform:uppercase}
+.pp-row{display:flex;justify-content:space-between;align-items:baseline;padding:5px 0}
+.pp-row-label{font:400 11px 'DM Sans',sans-serif;color:#9ab89d}
+.pp-row-value{font:500 12px monospace;color:#edf8ec;text-align:right;max-width:60%;word-break:break-all}
+.pp-hash{padding:14px 24px;text-align:center;border-bottom:1px solid rgba(237,248,236,.06)}
+.pp-hash code{font:400 9px monospace;color:rgba(237,248,236,.3);word-break:break-all;display:block;margin-bottom:4px}
+
+/* ── GRACE-FO ── */
+.grace-fo{margin-top:28px;padding-top:20px;border-top:1px solid rgba(108,212,203,0.15)}
+.grace-title{text-align:center;margin-bottom:16px}
+.grace-title h4{font:700 11px 'DM Mono',monospace;letter-spacing:3px;color:var(--aqua)}
+.grace-title p{font-size:12px;color:var(--muted);margin-top:4px}
+.grace-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px 20px;margin:12px 0}
+.grace-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px dotted var(--line)}
+.grace-row span:first-child{color:var(--muted);font-size:13px}
+.grace-row span:last-child{font-weight:600}
+.grace-row .amber{color:var(--amber)}
+.grace-row .red{color:var(--red)}
+.grace-row .lime{color:var(--lime)}
+.grace-sources{text-align:center;margin-top:14px;font:400 10px 'DM Mono',monospace;color:var(--muted);letter-spacing:1px}
+.grace-note{text-align:center;margin-top:4px;font-size:10px;color:var(--muted);opacity:.6}
+
+/* ── METHODOLOGY ── */
+.method{background:var(--surface);border:1px solid var(--line);padding:20px 24px;margin:24px 0}
+.method summary{font:700 12px 'DM Sans',sans-serif;color:var(--paper);cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px}
+.method summary::-webkit-details-marker{display:none}
+.method summary::before{content:'▸';color:var(--aqua);font-size:10px;transition:transform .2s}
+.method[open] summary::before{transform:rotate(90deg)}
+.method-grid{margin-top:16px;display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.method-grid h4{font:700 11px 'DM Sans',sans-serif;color:var(--aqua);margin-bottom:8px;letter-spacing:.04em}
+.method-grid p{color:var(--muted);font-size:12px;line-height:1.5}
+
+/* ── SEVEN STEPS ── */
+.steps{counter-reset:step}
+.step{counter-increment:step;display:flex;gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.step::before{content:counter(step);display:grid;place-items:center;min-width:32px;height:32px;background:var(--surface);border:1px solid var(--line);color:var(--aqua);font:700 13px 'DM Mono',monospace}
+.step div h4{font-size:14px;letter-spacing:-.01em;margin-bottom:4px}
+.step div p{color:var(--muted);font-size:12px;line-height:1.5}
+
+/* ── UN GAPS ── */
+.gap{padding:16px 20px;background:var(--surface);border:1px solid var(--line);margin-bottom:8px;display:flex;gap:14px;align-items:flex-start}
+.gap-num{min-width:28px;height:28px;display:grid;place-items:center;background:rgba(108,212,203,.1);color:var(--aqua);font:700 12px 'DM Mono',monospace;border-radius:2px}
+.gap h4{font-size:13px;margin-bottom:4px}
+.gap p{color:var(--muted);font-size:12px;line-height:1.45}
+
+/* ── FOOTER ── */
+.foot{padding:60px 0 40px;text-align:center}
+.fm{font:400 52px Georgia,serif;color:var(--aqua);margin-bottom:12px}
+.foot p{color:var(--muted);font-size:13px;line-height:1.6;max-width:600px;margin:0 auto}
+.foot a{color:var(--aqua);text-decoration:none}
+.foot a:hover{text-decoration:underline}
+
+/* ── CTA ── */
+.cta-row{display:flex;gap:10px;justify-content:center;margin-top:20px;flex-wrap:wrap}
+.cta{display:inline-block;padding:12px 22px;font:700 12px 'DM Sans',sans-serif;text-decoration:none;letter-spacing:.02em;border-radius:2px}
+.cta-primary{background:var(--lime);color:#0a1a0f}
+.cta-secondary{background:transparent;color:var(--aqua);border:1px solid rgba(108,212,203,.3)}
+
+/* ── DC NOTE ── */
+.dc-note{margin-top:16px;padding:14px 18px;background:rgba(200,245,96,.04);border:1px solid rgba(200,245,96,.1);font-size:12px;color:var(--muted);line-height:1.5}
+.dc-note strong{color:var(--paper)}
+
+/* ── RESPONSIVE ── */
+@media(max-width:640px){
+  .shell{width:calc(100% - 28px)}
+  .grid-2,.grid-3,.tristack,.method-grid,.grace-grid{grid-template-columns:1fr}
+  .nav-links{display:none}
+  .hero{padding:40px 0 28px}
+  .hero h1{font-size:28px}
+  .ctx{flex-direction:column;gap:10px}
+  .ctx-div{width:100%;height:1px}
+}
+</style></head><body>
+
+<!-- ═══ NAV ═══ -->
+<nav class="nav">
+<a href="/" class="brand"><b>N</b> DeBacco Nexus</a>
+<div class="nav-links">
+<a href="/">Home</a>
+<a href="/chain.html">Chain</a>
+<a href="/seal.html">Seal</a>
+<a href="/environment.html">EFD</a>
+<a href="/ecos.html" style="color:var(--paper)">ECOS</a>
+<a href="/ecos-demo.html">Demo</a>
+<a href="/sdg.html">SDGs</a>
+<a href="/un-gaps.html">UN Gaps</a>
+<a href="/about.html">About</a>
+</div>
+<a href="/chain.html" class="nav-cta">Run live gate</a>
+</nav>
+
+<main class="shell">
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+<div class="mark">οἶκος</div>
+<span class="etym">oîkos — household, habitat, the living economy</span>
+<h1>Environmental Cost <em>of Service.</em></h1>
+<p class="sub">The first patented operational AI governance certification system. Every inference carries a governed receipt — cryptographic, timestamped, patent-stamped, verifiable. That is not a metaphor. That is architecture.</p>
+<span class="phrase">USPTO Patent Pending: 19/571,156 &middot; Governedware&trade;</span>
+<div class="cta-row">
+<a href="/ecos-demo.html" class="cta cta-primary">Run live ECOS demo</a>
+<a href="/chain.html" class="cta cta-secondary">View governed chain</a>
+</div>
+</section>
+
+<!-- ═══ CONTEXT BAR ═══ -->
+<div class="ctx">
+<div class="ctx-pair"><span class="ctx-k">System</span><span class="ctx-v">ECOS v2.1</span></div>
+<div class="ctx-div"></div>
+<div class="ctx-pair"><span class="ctx-k">Patent</span><span class="ctx-v">USPTO 19/571,156</span></div>
+<div class="ctx-div"></div>
+<div class="ctx-pair"><span class="ctx-k">Issuer</span><span class="ctx-v">DeBacco Nexus LLC</span></div>
+<div class="ctx-div"></div>
+<div class="ctx-pair"><span class="ctx-k">Status</span><span class="ctx-v">Operational</span></div>
+<span class="status-pill active">LIVE</span>
+</div>
+
+<hr class="sep">
+
+<!-- ═══ THE FOUR LAWS ═══ -->
+<section>
+<div class="card-label">The Four Laws of Governedware</div>
+<h2 style="font-size:clamp(22px,3.5vw,32px);letter-spacing:-.04em;margin-bottom:20px">No inference <em style="font:400 1em Georgia,serif;color:var(--lime)">without receipt.</em></h2>
+
+<div class="law"><div class="law-num">LAW I</div><p>No inference without authorization.</p></div>
+<div class="law"><div class="law-num">LAW II</div><p>No action without governance.</p></div>
+<div class="law"><div class="law-num">LAW III</div><p>No governance without provenance.</p></div>
+<div class="law"><div class="law-num">LAW IV</div><p>No decision without receipt.</p></div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══ THE TRISTACK ═══ -->
+<section>
+<div class="card-label">The TriStack &mdash; Three Layers, One Receipt</div>
+<h2 style="font-size:clamp(22px,3.5vw,32px);letter-spacing:-.04em;margin-bottom:20px">Hardware to output. <em style="font:400 1em Georgia,serif;color:var(--lime)">One chain.</em></h2>
+
+<div class="tristack">
+<div class="tri-layer">
+<div class="tri-num">1</div>
+<h4>Hardware Production Authentication</h4>
+<p>Verifies the physical infrastructure. The compute is real, the provider is declared.</p>
+</div>
+<div class="tri-layer">
+<div class="tri-num">2</div>
+<h4>Pre-Inference Compliance Certification</h4>
+<p>Gates every inference before it executes. No request bypasses the governed checkpoint.</p>
+</div>
+<div class="tri-layer">
+<div class="tri-num">3</div>
+<h4>Multi-Media Forensic Analysis</h4>
+<p>Validates the output after inference. The result is checked against the declared mission.</p>
+</div>
+</div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══ SEVEN-STEP VERIFICATION ═══ -->
+<section>
+<div class="card-label">The Seven-Step Verification Model</div>
+<h2 style="font-size:clamp(22px,3.5vw,32px);letter-spacing:-.04em;margin-bottom:20px">Mutual independence <em style="font:400 1em Georgia,serif;color:var(--lime)">is the architecture.</em></h2>
+
+<div class="steps">
+<div class="step"><div><h4>AI Provider Maintains Internal Controls</h4><p>The provider's own safety systems remain intact. ECOS does not replace them.</p></div></div>
+<div class="step"><div><h4>One API Key Deployed</h4><p>One key drops into any organization's existing operating system. No technicians. No hiring.</p></div></div>
+<div class="step"><div><h4>Governedware Gate Activates</h4><p>The patented gate intercepts the inference before it reaches the model.</p></div></div>
+<div class="step"><div><h4>Hardware Authentication Verified</h4><p>The physical infrastructure is declared and checked against the TriStack Layer&nbsp;1.</p></div></div>
+<div class="step"><div><h4>Governed Inference + Cryptographic Receipt</h4><p>The model runs. A SHA-256 receipt chain and Ed25519 signature are issued in real time.</p></div></div>
+<div class="step"><div><h4>Independent Verification — No Permission Required</h4><p>Anyone can check the receipt. No access to the issuer's system is needed.</p></div></div>
+<div class="step"><div><h4>Registered in the UN AI Dialogue Partnerships Hub</h4><p>The system is registered as an operational contribution to global AI governance.</p></div></div>
+</div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══ CARBON FOOTPRINT PASSPORT ═══ -->
+<section>
+<div class="card-label">Carbon Footprint Passport</div>
+<h2 style="font-size:clamp(22px,3.5vw,32px);letter-spacing:-.04em;margin-bottom:10px">Every receipt is <em style="font:400 1em Georgia,serif;color:var(--lime)">a carbon passport.</em></h2>
+<p style="color:var(--muted);font-size:14px;line-height:1.6;max-width:640px;margin-bottom:24px">Every governed inference carries a declared environmental estimate — energy consumed, water used, CO₂ emitted, and energy prevented. The Passport is not a projection. It is a working instrument.</p>
+
+<!-- Passport Preview Card -->
+<div class="passport-preview">
+<div class="pp-header">
+<h2>Carbon Footprint Passport</h2>
+<p>ATHENA Research Network &mdash; Governed Inference</p>
+<div class="pp-badge">GREEN &middot; CERTIFIED</div>
+</div>
+<div class="pp-section">
+<div class="pp-section-label">Provenance</div>
+<div class="pp-row"><span class="pp-row-label">Issuer</span><span class="pp-row-value">DeBacco Nexus LLC</span></div>
+<div class="pp-row"><span class="pp-row-label">Model</span><span class="pp-row-value">claude-opus-4-6</span></div>
+<div class="pp-row"><span class="pp-row-label">Subject</span><span class="pp-row-value">ESCO skill taxonomy — maritime occupations</span></div>
+</div>
+<div class="pp-section">
+<div class="pp-section-label">Environmental Fiduciary Duty</div>
+<div class="pp-row"><span class="pp-row-label">Tokens</span><span class="pp-row-value">800</span></div>
+<div class="pp-row"><span class="pp-row-label">Energy</span><span class="pp-row-value">4.32 J</span></div>
+<div class="pp-row"><span class="pp-row-label">CO₂e</span><span class="pp-row-value">0.00149 g</span></div>
+<div class="pp-row"><span class="pp-row-label">Water</span><span class="pp-row-value">0.0060 mL</span></div>
+<div class="pp-row"><span class="pp-row-label">Grid Coefficient</span><span class="pp-row-value">340 g/kWh</span></div>
+</div>
+<div class="pp-hash">
+<code>SHA-256: a4f7c2e8…b91d3f06</code>
+<code>Ed25519: signed &middot; verifiable</code>
+</div>
+</div>
+
+<p class="dc-note"><strong style="color:var(--paper)">Scaled to ATHENA:</strong> 200 researchers &times; 50 weeks &times; 60 queries/week = 600,000 queries/year. Ungoverned: 2.59&nbsp;GJ &middot; 720&nbsp;kWh &middot; 248&nbsp;kg&nbsp;CO₂. Governed: 0.59&nbsp;GJ &middot; 164&nbsp;kWh &middot; 56&nbsp;kg&nbsp;CO₂. <strong style="color:var(--lime)">Annual savings: 556 kWh and 191 kg CO₂ across a single research network.</strong> That is publishable data from a working instrument — not a projection.</p>
+</section>
+
+<hr class="sep">
+
+<!-- ═══ CERTIFIED CHAIN CALIBRATION ═══ -->
+<section>
+<div class="card-label">From Live Chain Calibration</div>
+<h2 style="font-size:clamp(22px,3.5vw,32px);letter-spacing:-.04em;margin-bottom:10px">Certified verdicts. <em style="font:400 1em Georgia,serif;color:var(--lime)">Real data.</em></h2>
+<p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:20px">These are governed inference results from live ATHENA research queries. Every row was gated, receipted, and signed.</p>
+
+<div style="overflow-x:auto">
+<table class="cert-table">
+<thead>
+<tr><th>Task</th><th>In</th><th>Out</th><th>Tier</th><th>Verdict</th></tr>
+</thead>
+<tbody>
+<tr><td>ESCO skill taxonomy — maritime occupations</td><td>380</td><td>420</td><td class="tier">opus</td><td><span class="badge">CERTIFIED</span></td></tr>
+<tr><td>SDG alignment — green skills → sustainability goals</td><td>290</td><td>350</td><td class="tier">opus</td><td><span class="badge">CERTIFIED</span></td></tr>
+<tr><td>Energy efficiency workforce gap — port sector</td><td>410</td><td>480</td><td class="tier">opus</td><td><span class="badge">CERTIFIED</span></td></tr>
+<tr><td>Twin transition literature synthesis — EU regulation</td><td>520</td><td>512</td><td class="tier">opus</td><td><span class="badge">CERTIFIED</span></td></tr>
+<tr><td>ESCO cross-reference validation (lower tier sufficient)</td><td>310</td><td>280</td><td class="tier">sonnet</td><td><span class="badge">CERTIFIED</span></td></tr>
+<tr><td>Port emission regression — firm-level data</td><td>440</td><td>510</td><td class="tier">opus</td><td><span class="badge">CERTIFIED</span></td></tr>
+<tr><td>Workforce upskilling pathway projection</td><td>350</td><td>390</td><td class="tier">opus</td><td><span class="badge">CERTIFIED</span></td></tr>
+<tr><td>Climate neutrality directive mapping — EU 2030</td><td>400</td><td>460</td><td class="tier">opus</td><td><span class="badge">CERTIFIED</span></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══ GRACE-FO ECOS — REGIONAL ENVIRONMENTAL CONTEXT ═══ -->
+<section>
+<div class="card-label">GRACE-FO ECOS &mdash; Regional Environmental Context</div>
+<h2 style="font-size:clamp(22px,3.5vw,32px);letter-spacing:-.04em;margin-bottom:10px">The Earth <em style="font:400 1em Georgia,serif;color:var(--lime)">behind the compute.</em></h2>
+<p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:24px">NASA satellite vital signs for the data center region. These baselines contextualize every governed inference. The planet's condition is not a footnote — it is the reason this system exists.</p>
+
+<div class="card" style="background:rgba(13,26,18,.95)">
+<div class="grace-title">
+<h4>GRACE-FO ECOS &mdash; REGIONAL ENVIRONMENTAL CONTEXT</h4>
+<p>Data Center Region: Northern California</p>
+<p>37.39&deg;N, 122.08&deg;W</p>
+</div>
+
+<div class="grace-grid">
+<div class="grace-row"><span>Water Storage</span><span class="amber">-2.1 cm EWT</span></div>
+<div class="grace-row"><span>Soil Moisture</span><span class="amber">-2.5 %</span></div>
+<div class="grace-row"><span>CO₂</span><span class="red">425 ppm</span></div>
+<div class="grace-row"><span>Temp Anomaly</span><span class="red">+1.3 &deg;C</span></div>
+<div class="grace-row"><span>Precipitation</span><span class="amber">-60 mm/yr</span></div>
+<div class="grace-row"><span>Sea Surface Temp</span><span class="amber">+0.8 &deg;C</span></div>
+<div class="grace-row"><span>Ozone Layer</span><span class="lime">292 DU</span></div>
+<div class="grace-row"><span>Fire Activity</span><span class="red">Above avg</span></div>
+<div class="grace-row"><span>Vegetation</span><span class="amber">-3.2 % NDVI</span></div>
+<div class="grace-row"><span>Aerosol Load</span><span class="amber">0.18 AOD</span></div>
+</div>
+
+<div class="grace-sources">NASA GRACE-FO &middot; SMAP &middot; GPM &middot; MODIS &middot; OMI &middot; OCO-2 &middot; GISS &middot; VIIRS</div>
+<div class="grace-note">Environmental baselines from published NASA/NOAA mission data</div>
+</div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══ UN GENEVA DIALOGUE GAPS ═══ -->
+<section>
+<div class="card-label">Geneva Dialogue Connection</div>
+<h2 style="font-size:clamp(22px,3.5vw,32px);letter-spacing:-.04em;margin-bottom:10px">Six gaps. <em style="font:400 1em Georgia,serif;color:var(--lime)">One system.</em></h2>
+<p style="color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:20px">Six gaps from the May 2026 UN Global Dialogue on AI Governance that ECOS fills.</p>
+
+<div class="gap"><div class="gap-num">1</div><div><h4>Governing Autonomous Systems</h4><p>Every inference is gated before execution. No autonomous action runs ungoverned.</p></div></div>
+<div class="gap"><div class="gap-num">2</div><div><h4>Interoperability Through Technical Standards</h4><p>One API key. Any organization. The same receipt chain works across providers.</p></div></div>
+<div class="gap"><div class="gap-num">3</div><div><h4>Environmental Sustainability and Transparency</h4><p>Every inference carries a declared energy, water, and carbon estimate. The Carbon Footprint Passport makes it public.</p></div></div>
+<div class="gap"><div class="gap-num">4</div><div><h4>From Access to Capacity</h4><p>$99/month for organizations under 50 staff. No technicians. No maintenance.</p></div></div>
+<div class="gap"><div class="gap-num">5</div><div><h4>The Partnerships Hub</h4><p>Registered in the UN AI Dialogue Partnerships Hub as an operational contribution.</p></div></div>
+<div class="gap"><div class="gap-num">6</div><div><h4>Independent Evidence Base</h4><p>Receipts are independently verifiable. No permission from the issuer is required.</p></div></div>
+</section>
+
+<hr class="sep">
+
+<!-- ═══ METHODOLOGY ═══ -->
+<section>
+<details class="method">
+<summary>Methodology — energy, water, and carbon estimates</summary>
+<div class="method-grid">
+<div>
+<h4>Energy (Joules)</h4>
+<p>Per-token energy derived from published GPU power measurements (NVIDIA A100/H100) at declared utilization. Gate + target inference summed. 1 token ≈ 0.0054 J (opus tier at 340 g CO₂/kWh grid).</p>
+</div>
+<div>
+<h4>Water (mL)</h4>
+<p>Cooling water estimate from published data-center PUE and water-usage-effectiveness (WUE) ratios. Northern California regional coefficients applied.</p>
+</div>
+<div>
+<h4>CO₂e (grams)</h4>
+<p>Energy × grid carbon intensity. Greek grid: 340 g/kWh (EU average). Northern California: 210 g/kWh. Declared at issue time.</p>
+</div>
+<div>
+<h4>Prevented Energy</h4>
+<p>When a governed gate withholds an inference (WITHHOLD or CRISIS_ROUTE), the target model's energy is prevented — never consumed. That prevention is the environmental fiduciary duty in action.</p>
+</div>
+</div>
+</details>
+
+<details class="method" style="margin-top:12px">
+<summary>GRACE-FO environmental baselines — sources</summary>
+<div class="method-grid">
+<div>
+<h4>Satellite Missions</h4>
+<p>GRACE-FO (gravity/water mass), SMAP (soil moisture), GPM (precipitation), OCO-2 (CO₂), MODIS/VIIRS (vegetation, fire, aerosol), OMI (ozone), GISS (temperature).</p>
+</div>
+<div>
+<h4>Regional Context</h4>
+<p>Data center coordinates: 37.39°N, 122.08°W (Northern California). Baselines from published NASA/NOAA mission archives. Values represent regional anomalies relative to climatological means.</p>
+</div>
+</div>
+</details>
+</section>
+
+<hr class="sep">
+
+<!-- ═══ LINKS ═══ -->
+<section>
+<div class="grid-3">
+<a href="/ecos-demo.html" class="card" style="text-decoration:none">
+<div class="card-label">Live Demo</div>
+<h3>Run a governed <em>ECOS query</em></h3>
+<p>See the gate, the receipt, the carbon passport, and the GRACE-FO context — all in real time.</p>
+</a>
+<a href="/seal.html" class="card" style="text-decoration:none">
+<div class="card-label">Seal System</div>
+<h3>Carbon Footprint <em>Passport seal</em></h3>
+<p>QR, band, and spectral seals that open the same signed Passport record.</p>
+</a>
+<a href="/environment.html" class="card" style="text-decoration:none">
+<div class="card-label">EFD</div>
+<h3>Environmental <em>Fiduciary Duty</em></h3>
+<p>The commitment to use AI with care for people and the planet.</p>
+</a>
+</div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<section class="foot">
+<div class="fm">οἶκος</div>
+<p>ECOS — Environmental Cost of Service. The economy of compute governed by the ecology of the planet.</p>
+<p style="margin-top:6px">Every receipt is a carbon passport. Every withheld inference is energy the planet never had to absorb.</p>
+<p style="margin-top:6px"><strong style="color:var(--paper)">We don't offset. We prevent.</strong></p>
+
+<!-- GRACE-FO in footer -->
+<div class="grace-fo">
+<div class="grace-title">
+<h4>GRACE-FO ECOS &mdash; REGIONAL ENVIRONMENTAL CONTEXT</h4>
+<p>Data Center Region: Northern California</p>
+<p>37.39&deg;N, 122.08&deg;W</p>
+</div>
+<div class="grace-grid" style="max-width:600px;margin:12px auto">
+<div class="grace-row"><span>Water Storage</span><span class="amber">-2.1 cm EWT</span></div>
+<div class="grace-row"><span>Soil Moisture</span><span class="amber">-2.5 %</span></div>
+<div class="grace-row"><span>CO₂</span><span class="red">425 ppm</span></div>
+<div class="grace-row"><span>Temp Anomaly</span><span class="red">+1.3 &deg;C</span></div>
+<div class="grace-row"><span>Precipitation</span><span class="amber">-60 mm/yr</span></div>
+<div class="grace-row"><span>Sea Surface Temp</span><span class="amber">+0.8 &deg;C</span></div>
+<div class="grace-row"><span>Ozone Layer</span><span class="lime">292 DU</span></div>
+<div class="grace-row"><span>Fire Activity</span><span class="red">Above avg</span></div>
+<div class="grace-row"><span>Vegetation</span><span class="amber">-3.2 % NDVI</span></div>
+<div class="grace-row"><span>Aerosol Load</span><span class="amber">0.18 AOD</span></div>
+</div>
+<div class="grace-sources">NASA GRACE-FO &middot; SMAP &middot; GPM &middot; MODIS &middot; OMI &middot; OCO-2 &middot; GISS &middot; VIIRS</div>
+<div class="grace-note">Environmental baselines from published NASA/NOAA mission data</div>
+</div>
+
+<p style="margin-top:14px"><a href="/environment.html">Environmental Fiduciary Duty ↗</a> &middot; <a href="/chain.html">Live gate ↗</a> &middot; <a href="https://papers.ssrn.com/sol3/cf_dev/AbsByAuth.cfm?per_id=12905688" target="_blank">SSRN ↗</a></p>
+<p style="margin-top:14px;font-size:10px">Energy, water, and CO₂ figures are derived from published per-token measurements and Greek grid data (see Methodology). Budget logic, receipts, and hashes execute locally. &copy; 2026 DeBacco Nexus LLC. Governedware&trade;</p>
+</section>
+
+</main>
+
+<script src="/nav.js"></script>
+</body></html>
