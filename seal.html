@@ -66,7 +66,7 @@ canvas#particles.active{opacity:1}
 @keyframes audioPulse{0%{box-shadow:0 0 40px rgba(125,229,220,.12)}50%{box-shadow:0 0 80px rgba(125,229,220,.5),0 0 120px rgba(217,255,122,.2)}100%{box-shadow:0 0 40px rgba(125,229,220,.12)}}
 @media(max-width:400px){.camera-view,.audio-view{width:100%;max-width:340px}.camera-view{height:220px}}
 </style></head><body>
-<nav class="nav"><a href="/" class="brand"><b>N</b> DeBacco Nexus</a><div class="nav-links"><a href="/">Home</a><a href="/chain.html">Live Chain</a><a href="/seal.html">Seal</a><a href="/ecos.html">ECOS</a><a href="/gate.html">Gate Demo</a><a href="/environment.html">Environment</a><a href="/about.html">About</a></div><a href="/chain.html" class="nav-cta">Run live gate</a></nav>
+<nav class="nav"><a href="/" class="brand"><svg class="brand-mark" viewBox="0 0 200 200" width="26" height="26" aria-hidden="true" style="flex:none;display:block"><path d="M100 8 L180 54 L180 146 L100 192 L20 146 L20 54 Z" fill="#FFFFFF" stroke="#0C8A96" stroke-width="11" stroke-linejoin="round"/><g stroke="#0C8A96" stroke-width="2.5" fill="none" opacity="0.28"><circle cx="100" cy="100" r="50"/><ellipse cx="100" cy="100" rx="17" ry="50"/><ellipse cx="100" cy="100" rx="34" ry="50"/><line x1="50" y1="100" x2="150" y2="100"/></g><text x="100" y="124" text-anchor="middle" font-family="Inter,Arial,sans-serif" font-size="70" font-weight="800" fill="#0C8A96">DN</text></svg> DeBacco Nexus</a><div class="nav-links"><a href="/">Home</a><a href="/chain.html">Live Chain</a><a href="/seal.html">Seal</a><a href="/ecos.html">ECOS</a><a href="/gate.html">Gate Demo</a><a href="/environment.html">Environment</a><a href="/about.html">About</a></div><a href="/chain.html" class="nav-cta">Run live gate</a></nav>
 <main class="shell">
 <section class="hero"><div class="eyebrow">Carbon Footprint Passport</div><h1>One clear sign. <em>Any medium.</em></h1><p>A DeBacco Nexus seal tells people that a Carbon Footprint Passport exists. It can travel with a report, image, video, audio file, or dataset.</p></section>
 <section class="status-workbench" aria-labelledby="status-heading"><h2 id="status-heading">Read the seal at a glance.</h2><p>Every status has a clear color, shape, and plain-language meaning. The same meaning works on a document, video, audio file, data record, or Passport screen.</p><div class="status-legend"><article class="status-card green"><div class="status-mark" aria-hidden="true">&#10003;</div><h3>GREEN · VERIFIED</h3><p>An issued Passport was found and the record checks out.</p><strong>CHECK MARK · VERIFIED</strong></article><article class="status-card yellow"><div class="status-mark" aria-hidden="true">&#8545;</div><h3>YELLOW · PAUSED OR MISSING</h3><p>The work needs review, or no issued Passport could be found. Do not assume provenance.</p><strong>TRIANGLE · CHECK FIRST</strong></article><article class="status-card red"><div class="status-mark" aria-hidden="true">!</div><h3>RED · STOP / INVALID</h3><p>The record does not match or is not valid. Do not rely on the presented seal.</p><strong>OCTAGON · DO NOT RELY</strong></article></div><div class="demo-callout"><div class="status-mark" aria-hidden="true">!</div><div><h3>See the red status in action.</h3><p>Change an illustrative receipt character and watch the status change. The demonstration shows what an integrity warning looks like; it is not a physical-copy test.</p></div><a href="/passport-test.html">Try the Passport status tests</a></div></section>
@@ -139,14 +139,7 @@ ADVERSARIAL
 <canvas id="sealCanvas" width="400" height="400"></canvas>
 <div class="seal-glow" id="sealGlow"></div>
 <div class="seal-hex" id="sealHex">
-<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-<polygon points="100,10 180,55 180,145 100,190 20,145 20,55" fill="none" stroke="#287f45" stroke-width="2" opacity=".8"/>
-<polygon points="100,25 168,63 168,137 100,175 32,137 32,63" fill="rgba(40,127,69,.08)" stroke="#287f45" stroke-width="1" opacity=".5"/>
-<text x="100" y="92" text-anchor="middle" fill="#287f45" font-family="Georgia" font-size="42" font-weight="700">DN</text>
-<text x="100" y="118" text-anchor="middle" fill="#176f69" font-family="Inter,sans-serif" font-size="9" font-weight="800" letter-spacing="3">GOVERNED</text>
-<line x1="60" y1="128" x2="140" y2="128" stroke="rgba(23,111,105,.3)" stroke-width="1"/>
-<text x="100" y="145" text-anchor="middle" fill="#526e59" font-family="Inter,sans-serif" font-size="7" font-weight="600" letter-spacing="2" id="sealVerdictText">AWAITING SCAN</text>
-</svg>
+<svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><path id="sealHexFill" d="M100 8 L180 54 L180 146 L100 192 L20 146 L20 54 Z" fill="#0C8A96" stroke="#0C8A96" stroke-width="3" stroke-linejoin="round"/><path d="M100 18.5 L171 59.5 L171 140.5 L100 181.5 L29 140.5 L29 59.5 Z" fill="none" stroke="#4CD8E0" stroke-width="2.9" stroke-linejoin="round"/><g stroke="#CFF4F7" stroke-width="2.1" fill="none" opacity="0.5" stroke-linecap="round"><circle cx="100" cy="100" r="55"/><ellipse cx="100" cy="100" rx="19" ry="55"/><ellipse cx="100" cy="100" rx="37" ry="55"/><line x1="45" y1="100" x2="155" y2="100"/><line x1="57" y1="74" x2="143" y2="74"/><line x1="57" y1="126" x2="143" y2="126"/></g><text x="96" y="106" text-anchor="middle" font-family="Inter,sans-serif" font-size="56" font-weight="800" fill="#FFFFFF" letter-spacing="-1">Gov<tspan fill="#CFF4F7">5</tspan></text><text x="173" y="76" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" font-weight="700" fill="#FFFFFF">™</text><text x="100" y="135" text-anchor="middle" font-family="Inter,sans-serif" font-size="13" letter-spacing="3.6" font-weight="700" fill="#FFFFFF">GOVERNED</text><text x="100" y="153" text-anchor="middle" fill="#CFF4F7" font-family="Inter,sans-serif" font-size="6.6" font-weight="700" letter-spacing="0.9" id="sealVerdictText">AWAITING SCAN</text></svg>
 </div>
 </div>
 </div>
@@ -1034,11 +1027,11 @@ async function runPhotonScan(){
   var isAdversarial=selectedMedium==='adversarial'||(evidence&&evidence.tampered);
   if(isAdversarial){
     document.getElementById('sealVerdictText').textContent='RED · NOT CERTIFIED';
-    sealHex.style.background='radial-gradient(circle at 40% 35%,#3a1515 0%,#1a0808 70%)';
+    var hf=document.getElementById('sealHexFill');if(hf){hf.setAttribute('fill','#7A1F1F');hf.setAttribute('stroke','#7A1F1F');}
     sealGlow.style.background='radial-gradient(circle,rgba(224,85,80,.25) 0%,transparent 70%)';
     ringColor=[224,85,80];
   }else{
-    document.getElementById('sealVerdictText').textContent='GREEN · CLEARED';
+    document.getElementById('sealVerdictText').textContent='GREEN · CLEARED';var hf=document.getElementById('sealHexFill');if(hf){hf.setAttribute('fill','#0C8A96');hf.setAttribute('stroke','#0C8A96');}
   }
 
   var rect=sealHex.getBoundingClientRect();
@@ -1130,7 +1123,7 @@ function resetAll(){
   document.querySelectorAll('.stage-node').forEach(function(n){n.classList.remove('lit')});
   document.getElementById('photon').style.opacity='0';
   document.getElementById('trackFill').style.width='0';
-  var sH=document.getElementById('sealHex');sH.className='seal-hex';sH.style.background='';
+  var sH=document.getElementById('sealHex');sH.className='seal-hex';sH.style.background='';var hf=document.getElementById('sealHexFill');if(hf){hf.setAttribute('fill','#0C8A96');hf.setAttribute('stroke','#0C8A96');}
   var sG=document.getElementById('sealGlow');sG.className='seal-glow';sG.style.background='';
   document.getElementById('sealVerdictText').textContent='AWAITING SCAN';
   ringTarget=0;ringColor=[217,255,122];
