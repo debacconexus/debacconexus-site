@@ -45,7 +45,7 @@ function poll() {
       var j; try { j = JSON.parse(d); } catch (e) { return poll(); }
       if (j.state === 'saved') return console.log('BACKUP SAVED: ' + j.files + ' files in private GitHub repo ' + j.repo);
       if (j.state === 'failed') return console.log('Backup not saved: ' + j.error);
-      console.log('  saved ' + j.done + ' of ' + j.total + ' files...'); poll();
+      console.log('  saved ' + j.done + ' of ' + j.total + ' files' + (j.note ? ' (' + j.note + ')' : '') + '...'); poll();
     }); }).on('error', function () { poll(); });
   }, 8000);
 }
