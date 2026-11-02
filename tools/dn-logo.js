@@ -14,6 +14,8 @@ function walk(dir, depth) {
     var s = fs.readFileSync(p, 'utf8'), t = s;
     // <a ... class="...brand..."> ... <x>N</x> ... </a>
     t = t.replace(/(<(?:a|div|span|header)\b[^>]*class=["'][^"']*brand[^"']*["'][^>]*>)([\s\S]{0,300}?)<(b|span|i|div|strong|em)\b[^>]*>\s*N\s*<\/\3>(?=([A-Za-z]?))/g, function (m, a, pre, tag, nxt) { return a + pre + MARK + (nxt ? ' ' : ''); });
+    // inline SVG badge whose text is a lone N, right before the wordmark
+    t = t.replace(/<svg\b(?:(?!<\/svg>|<svg\b)[\s\S]){0,6000}?>\s*N\s*<\/text>\s*(?:<\/g>\s*)*<\/svg>(?=\s*DeBacco Nexus)/g, MARK);
     if (t !== s) { fs.writeFileSync(p + '.pre-dn.bak', s); fs.writeFileSync(p, t); changed.push(p); }
   });
 }
